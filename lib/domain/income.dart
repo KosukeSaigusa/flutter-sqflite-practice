@@ -28,6 +28,24 @@ class Income {
     );
   }
 
+  Future<void> updateIncome(Income income) async {
+    await db.update(
+      'incomes',
+      income.toMap(),
+      where: 'id = ?',
+      whereArgs: [income.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteIncome(Income income) async {
+    await db.delete(
+      'expenses',
+      where: 'id = ?',
+      whereArgs: [income.id],
+    );
+  }
+
   // Income インスタンスを DB に保存する形式に変換
   Map<String, dynamic> toMap() {
     return {
