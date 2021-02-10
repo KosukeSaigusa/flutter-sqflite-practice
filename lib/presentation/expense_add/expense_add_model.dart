@@ -204,7 +204,12 @@ class ExpenseAddModel extends ChangeNotifier {
   }
 
   void tapCategory(int tappedId) {
-    expenseCategoryId = tappedId;
+    if (currentTab == 0) {
+      expenseCategoryId = tappedId;
+    }
+    if (currentTab == 1) {
+      incomeCategoryId = tappedId;
+    }
     notifyListeners();
   }
 }

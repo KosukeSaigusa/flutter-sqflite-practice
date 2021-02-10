@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/common/weekday.dart';
 import 'package:flutter_sqflite_practice/domain/expense.dart';
+import 'package:flutter_sqflite_practice/domain/income.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_page.dart';
 import 'package:flutter_sqflite_practice/presentation/expense_update/expense_update_model.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseUpdatePage extends StatelessWidget {
-  ExpenseUpdatePage(this.expense);
+  ExpenseUpdatePage(this.expense, this.income);
   final Expense expense;
+  final Income income;
   @override
   Widget build(BuildContext context) {
     final _displayWidth = MediaQuery.of(context).size.width;
@@ -19,7 +21,7 @@ class ExpenseUpdatePage extends StatelessWidget {
     const _satisfactionLabelWidth = 15.0;
     return Scaffold(
       body: ChangeNotifierProvider<ExpenseUpdateModel>(
-        create: (_) => ExpenseUpdateModel(expense),
+        create: (_) => ExpenseUpdateModel(expense, income),
         child: Consumer<ExpenseUpdateModel>(
           builder: (context, model, child) {
             return Column(
@@ -630,8 +632,15 @@ class ExpenseUpdatePage extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color:
-                id == model.expenseCategoryId ? Colors.orange[300] : greyColor,
+            color: model.currentTab == 0
+                ? id == model.expenseCategoryId
+                    ? Colors.orange[300]
+                    : greyColor
+                : model.currentTab == 1
+                    ? id == model.incomeCategoryId
+                        ? Colors.orange[300]
+                        : greyColor
+                    : greyColor,
             width: 2,
           ),
           borderRadius: BorderRadius.all(

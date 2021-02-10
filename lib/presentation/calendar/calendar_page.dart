@@ -216,14 +216,17 @@ class CalendarPage extends StatelessWidget {
                                           children: [
                                             InkWell(
                                               onTap: () async {
-                                                // await Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) =>
-                                                //         ExpenseUpdatePage(Income income),
-                                                //     fullscreenDialog: true,
-                                                //   ),
-                                                // );
+                                                await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ExpenseUpdatePage(
+                                                            null,
+                                                            model.incomesOfDayList[
+                                                                i]),
+                                                    fullscreenDialog: true,
+                                                  ),
+                                                );
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.only(
@@ -270,6 +273,9 @@ class CalendarPage extends StatelessWidget {
                                                         ),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      width: 8.0,
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -308,8 +314,10 @@ class CalendarPage extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ExpenseUpdatePage(model
-                                                            .expensesOfDayList[i]),
+                                                        ExpenseUpdatePage(
+                                                            model.expensesOfDayList[
+                                                                i],
+                                                            null),
                                                     fullscreenDialog: true,
                                                   ),
                                                 );
@@ -345,23 +353,6 @@ class CalendarPage extends StatelessWidget {
                                                         ),
                                                       ),
                                                     ),
-                                                    Container(
-                                                      width: 80,
-                                                      child: Text(
-                                                        '${model.expensesOfDayList[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 4.0,
-                                                    ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
@@ -378,6 +369,23 @@ class CalendarPage extends StatelessWidget {
                                                           style: smTextStyle,
                                                         ),
                                                       ],
+                                                    ),
+                                                    SizedBox(
+                                                      width: 4.0,
+                                                    ),
+                                                    Container(
+                                                      width: 80,
+                                                      child: Text(
+                                                        '${model.expensesOfDayList[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 8.0,

@@ -6,18 +6,35 @@ import 'package:flutter_sqflite_practice/domain/income_category.dart';
 import 'package:flutter_sqflite_practice/main.dart';
 
 class ExpenseUpdateModel extends ChangeNotifier {
-  ExpenseUpdateModel(Expense expense) {
-    currentTab = 0;
-    year = expense.year;
-    month = expense.month;
-    date = expense.date;
-    note = expense.note;
-    price = expense.price;
-    satisfaction = expense.satisfaction;
-    expenseCategoryId = expense.expenseCategoryId;
-    incomeCategoryId = null;
-    expenseCategories = [];
-    incomeCategories = [];
+  ExpenseUpdateModel(Expense expense, Income income) {
+    if (income == null) {
+      currentTab = 0;
+      year = expense.year;
+      month = expense.month;
+      date = expense.date;
+      note = expense.note;
+      price = expense.price;
+      satisfaction = expense.satisfaction;
+      expenseCategoryId = expense.expenseCategoryId;
+      incomeCategoryId = null;
+      expenseCategories = [];
+      incomeCategories = [];
+    }
+
+    if (expense == null) {
+      currentTab = 1;
+      year = income.year;
+      month = income.month;
+      date = income.date;
+      note = income.note;
+      price = income.price;
+      satisfaction = 3;
+      expenseCategoryId = null;
+      incomeCategoryId = income.incomeCategoryId;
+      expenseCategories = [];
+      incomeCategories = [];
+    }
+
     isPriceValid = true;
     showPriceError = false;
     init();
@@ -145,7 +162,12 @@ class ExpenseUpdateModel extends ChangeNotifier {
   }
 
   void tapCategory(int tappedId) {
-    expenseCategoryId = tappedId;
+    if (currentTab == 0) {
+      expenseCategoryId = tappedId;
+    }
+    if (currentTab == 1) {
+      incomeCategoryId = tappedId;
+    }
     notifyListeners();
   }
 }

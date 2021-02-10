@@ -663,8 +663,15 @@ class ExpenseAddPage extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color:
-                id == model.expenseCategoryId ? Colors.orange[300] : greyColor,
+            color: model.currentTab == 0
+                ? id == model.expenseCategoryId
+                    ? Colors.orange[300]
+                    : greyColor
+                : model.currentTab == 1
+                    ? id == model.incomeCategoryId
+                        ? Colors.orange[300]
+                        : greyColor
+                    : greyColor,
             width: 2,
           ),
           borderRadius: BorderRadius.all(
