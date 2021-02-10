@@ -5,6 +5,7 @@ import 'package:flutter_sqflite_practice/domain/expense.dart';
 import 'package:flutter_sqflite_practice/domain/income.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_page.dart';
 import 'package:flutter_sqflite_practice/presentation/expense_update/expense_update_model.dart';
+import 'package:flutter_sqflite_practice/presentation/top/top_page.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseUpdatePage extends StatelessWidget {
@@ -102,8 +103,57 @@ class ExpenseUpdatePage extends StatelessWidget {
                         width: 48.0,
                         child: IconButton(
                           icon: Icon(Icons.delete_outline),
-                          onPressed: () {
-                            print('削除するよ');
+                          onPressed: () async {
+                            if (model.currentTab == 0) {
+                              await model.deleteExpense(expense);
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text('支出を削除しました。'),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('OK'),
+                                        onPressed: () async {
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TopPage(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            if (model.currentTab == 1) {
+                              await model.deleteIncome(income);
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text('収入を削除しました。'),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('OK'),
+                                        onPressed: () async {
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TopPage(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           },
                         ),
                       ),
@@ -401,7 +451,7 @@ class ExpenseUpdatePage extends StatelessWidget {
                     onPressed: model.isPriceValid
                         ? () async {
                             if (model.currentTab == 0) {
-                              await model.updateExpense();
+                              await model.updateExpense(expense);
                               await showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -415,8 +465,7 @@ class ExpenseUpdatePage extends StatelessWidget {
                                           await Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CalendarPage(),
+                                              builder: (context) => TopPage(),
                                             ),
                                           );
                                         },
@@ -426,7 +475,7 @@ class ExpenseUpdatePage extends StatelessWidget {
                                 },
                               );
                             } else if (model.currentTab == 1) {
-                              await model.updateIncome();
+                              await model.updateIncome(income);
                               await showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -440,8 +489,7 @@ class ExpenseUpdatePage extends StatelessWidget {
                                           await Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CalendarPage(),
+                                              builder: (context) => TopPage(),
                                             ),
                                           );
                                         },

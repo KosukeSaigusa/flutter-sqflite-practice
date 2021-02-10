@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_sqflite_practice/main.dart';
 import 'package:sqflite/sql.dart';
 
@@ -27,6 +29,24 @@ class Expense {
       'expenses',
       expense.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateExpense(Expense expense) async {
+    await db.update(
+      'expenses',
+      expense.toMap(),
+      where: 'id = ?',
+      whereArgs: [expense.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteExpense(Expense expense) async {
+    await db.delete(
+      'expenses',
+      where: 'id = ?',
+      whereArgs: [expense.id],
     );
   }
 

@@ -20,7 +20,6 @@ class ExpenseUpdateModel extends ChangeNotifier {
       expenseCategories = [];
       incomeCategories = [];
     }
-
     if (expense == null) {
       currentTab = 1;
       year = income.year;
@@ -54,30 +53,42 @@ class ExpenseUpdateModel extends ChangeNotifier {
   bool isPriceValid;
   bool showPriceError;
 
-  Future<void> updateExpense() async {
-    // final newExpense = Expense(
-    //   note: note,
-    //   expenseCategoryId: expenseCategoryId,
-    //   price: price,
-    //   satisfaction: satisfaction,
-    //   year: year,
-    //   month: month,
-    //   date: date,
-    // );
-    // await Expense().insertExpense(newExpense);
+  Future<void> updateExpense(Expense expense) async {
+    final updatedExpense = Expense(
+      id: expense.id,
+      note: note,
+      expenseCategoryId: expenseCategoryId,
+      price: price,
+      satisfaction: satisfaction,
+      year: year,
+      month: month,
+      date: date,
+    );
+    await Expense().updateExpense(updatedExpense);
     notifyListeners();
   }
 
-  Future<void> updateIncome() async {
-    // final newIncome = Income(
-    //   note: note,
-    //   incomeCategoryId: incomeCategoryId,
-    //   price: price,
-    //   year: year,
-    //   month: month,
-    //   date: date,
-    // );
-    // await Income().insertIncome(newIncome);
+  Future<void> updateIncome(Income income) async {
+    final updatedIncome = Income(
+      id: income.id,
+      note: note,
+      incomeCategoryId: incomeCategoryId,
+      price: price,
+      year: year,
+      month: month,
+      date: date,
+    );
+    await Income().updateIncome(updatedIncome);
+    notifyListeners();
+  }
+
+  Future<void> deleteExpense(Expense expense) async {
+    await Expense().deleteExpense(expense);
+    notifyListeners();
+  }
+
+  Future<void> deleteIncome(Income income) async {
+    await Income().deleteIncome(income);
     notifyListeners();
   }
 
