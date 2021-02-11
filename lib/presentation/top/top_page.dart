@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sqflite_practice/presentation/budget/budget_page.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_page.dart';
 import 'package:flutter_sqflite_practice/presentation/top/top_model.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ class TopPage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         _tabPage(currentIndex, 0, CalendarPage()),
-        _tabPage(currentIndex, 1, CalendarPage()),
+        _tabPage(currentIndex, 1, BudgetPage()),
         _tabPage(currentIndex, 2, CalendarPage()),
       ],
     );
