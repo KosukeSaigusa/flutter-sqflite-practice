@@ -261,7 +261,12 @@ class CalendarPage extends StatelessWidget {
                                                     Container(
                                                       width: 80,
                                                       child: Text(
-                                                        '${model.incomesOfEachDay[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
+                                                        '${model.incomesOfEachDay[i].price} 円'
+                                                            .replaceAllMapped(
+                                                                RegExp(
+                                                                    r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                (m) =>
+                                                                    '${m[1]},'),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -375,7 +380,12 @@ class CalendarPage extends StatelessWidget {
                                                     Container(
                                                       width: 80,
                                                       child: Text(
-                                                        '${model.expensesOfEachDay[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
+                                                        '${model.expensesOfEachDay[i].price} 円'
+                                                            .replaceAllMapped(
+                                                                RegExp(
+                                                                    r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                (m) =>
+                                                                    '${m[1]},'),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
