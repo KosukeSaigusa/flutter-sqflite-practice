@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/common/weekday.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_model.dart';
@@ -15,33 +16,15 @@ class CalendarPage extends StatelessWidget {
       child: Consumer<CalendarModel>(
         builder: (context, model, child) {
           return Scaffold(
+            appBar: customAppBar,
             body: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   color: greyColor,
-                  height: appBarHeight,
-                ),
-                Container(
-                  color: greyColor,
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: _width,
-                            padding: EdgeInsets.only(left: 8.0),
-                            color: greyColor,
-                            child: Text(
-                              '${model.year}年${model.month}月の家計簿',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Row(
                         children: [
                           Container(
@@ -51,13 +34,28 @@ class CalendarPage extends StatelessWidget {
                               right: 8.0,
                             ),
                             child: Container(
-                              child: Text(
-                                '固定費：123456円'.replaceAllMapped(
-                                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                    (m) => '${m[1]},'),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '固定費：',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   '86700 円'.replaceAllMapped(
+                                  //       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  //       (m) => '${m[1]},'),
+                                  //   style: TextStyle(
+                                  //     fontWeight: FontWeight.bold,
+                                  //   ),
+                                  // ),
+                                  Text('未登録'),
+                                  RaisedButton(
+                                    onPressed: () {},
+                                    child: Text('固定費を登録する'),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -73,9 +71,10 @@ class CalendarPage extends StatelessWidget {
                             ),
                             child: Container(
                               child: Text(
-                                '合計支出：92460円'.replaceAllMapped(
-                                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                    (m) => '${m[1]},'),
+                                '合計支出：${model.totalExpenseOfMonth} 円'
+                                    .replaceAllMapped(
+                                        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                        (m) => '${m[1]},'),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -197,7 +196,7 @@ class CalendarPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        model.incomesOfDayList.isEmpty
+                        model.incomesOfEachDay.isEmpty
                             ? SizedBox()
                             : Container(
                                 padding: EdgeInsets.only(
@@ -207,7 +206,7 @@ class CalendarPage extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     for (int i = 0;
-                                        i < model.incomesOfDayList.length;
+                                        i < model.incomesOfEachDay.length;
                                         i++)
                                       Container(
                                         child: Column(
@@ -222,7 +221,7 @@ class CalendarPage extends StatelessWidget {
                                                     builder: (context) =>
                                                         ExpenseUpdatePage(
                                                             null,
-                                                            model.incomesOfDayList[
+                                                            model.incomesOfEachDay[
                                                                 i]),
                                                     fullscreenDialog: true,
                                                   ),
@@ -236,7 +235,7 @@ class CalendarPage extends StatelessWidget {
                                                 child: Row(
                                                   children: [
                                                     Icon(model.incomeCategoryIdIconMap[model
-                                                            .incomesOfDayList[i]
+                                                            .incomesOfEachDay[i]
                                                             .incomeCategoryId]
                                                         as IconData),
                                                     SizedBox(
@@ -244,14 +243,14 @@ class CalendarPage extends StatelessWidget {
                                                     ),
                                                     Container(
                                                       child: Text(
-                                                        '${model.incomeCategoryIdNameMap[model.incomesOfDayList[i].incomeCategoryId]}',
+                                                        '${model.incomeCategoryIdNameMap[model.incomesOfEachDay[i].incomeCategoryId]}',
                                                         style: smTextStyle,
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: Container(
                                                         child: Text(
-                                                          '（${model.incomesOfDayList[i].note}）',
+                                                          '：${model.incomesOfEachDay[i].note}',
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           maxLines: 1,
@@ -262,7 +261,7 @@ class CalendarPage extends StatelessWidget {
                                                     Container(
                                                       width: 80,
                                                       child: Text(
-                                                        '${model.incomesOfDayList[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
+                                                        '${model.incomesOfEachDay[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -291,7 +290,7 @@ class CalendarPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                        model.expensesOfDayList.isEmpty
+                        model.expensesOfEachDay.isEmpty
                             ? SizedBox()
                             : Container(
                                 padding: EdgeInsets.only(
@@ -301,7 +300,7 @@ class CalendarPage extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     for (int i = 0;
-                                        i < model.expensesOfDayList.length;
+                                        i < model.expensesOfEachDay.length;
                                         i++)
                                       Container(
                                         child: Column(
@@ -315,7 +314,7 @@ class CalendarPage extends StatelessWidget {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         ExpenseUpdatePage(
-                                                            model.expensesOfDayList[
+                                                            model.expensesOfEachDay[
                                                                 i],
                                                             null),
                                                     fullscreenDialog: true,
@@ -330,7 +329,7 @@ class CalendarPage extends StatelessWidget {
                                                 child: Row(
                                                   children: [
                                                     Icon(model.expenseCategoryIdIconMap[model
-                                                            .expensesOfDayList[i]
+                                                            .expensesOfEachDay[i]
                                                             .expenseCategoryId]
                                                         as IconData),
                                                     SizedBox(
@@ -338,14 +337,14 @@ class CalendarPage extends StatelessWidget {
                                                     ),
                                                     Container(
                                                       child: Text(
-                                                        '${model.expenseCategoryIdNameMap[model.expensesOfDayList[i].expenseCategoryId]}',
+                                                        '${model.expenseCategoryIdNameMap[model.expensesOfEachDay[i].expenseCategoryId]}',
                                                         style: smTextStyle,
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: Container(
                                                         child: Text(
-                                                          '（${model.expensesOfDayList[i].note}）',
+                                                          '：${model.expensesOfEachDay[i].note}',
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           maxLines: 1,
@@ -365,7 +364,7 @@ class CalendarPage extends StatelessWidget {
                                                         ),
                                                         SizedBox(width: 2.0),
                                                         Text(
-                                                          '${model.expensesOfDayList[i].satisfaction}',
+                                                          '${model.expensesOfEachDay[i].satisfaction}',
                                                           style: smTextStyle,
                                                         ),
                                                       ],
@@ -376,7 +375,7 @@ class CalendarPage extends StatelessWidget {
                                                     Container(
                                                       width: 80,
                                                       child: Text(
-                                                        '${model.expensesOfDayList[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
+                                                        '${model.expensesOfEachDay[i].price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} 円',
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -419,7 +418,7 @@ class CalendarPage extends StatelessWidget {
               width: 56.0,
               height: 56.0,
               child: RaisedButton(
-                child: Icon(Icons.edit),
+                child: Icon(Icons.add, color: Colors.white),
                 color: Colors.orange,
                 shape: const CircleBorder(),
                 onPressed: () async {

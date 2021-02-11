@@ -10,10 +10,11 @@ class CalendarModel extends ChangeNotifier {
     expenseCategoryIdIconMap = {};
     incomeCategoryIdNameMap = {};
     incomeCategoryIdIconMap = {};
-    expensesOfDayList = [];
-    incomesOfDayList = [];
+    expensesOfEachDay = [];
+    incomesOfEachDay = [];
     totalExpensePricesOfEachDay = [];
     totalIncomePricesOfEachDay = [];
+    totalExpenseOfMonth = 0;
     year = DateTime.now().year;
     month = DateTime.now().month;
     date = DateTime.now().day;
@@ -24,19 +25,21 @@ class CalendarModel extends ChangeNotifier {
   Map expenseCategoryIdIconMap;
   Map incomeCategoryIdNameMap;
   Map incomeCategoryIdIconMap;
-  List<Expense> expensesOfDayList;
-  List<Income> incomesOfDayList;
+  List<Expense> expensesOfEachDay;
+  List<Income> incomesOfEachDay;
   List<int> totalExpensePricesOfEachDay;
   List<int> totalIncomePricesOfEachDay;
+  int totalExpenseOfMonth;
   int year;
   int month;
   int date;
 
   Future<void> init() async {
-    expensesOfDayList = await fetchExpensesOfDay(year, month, date);
-    incomesOfDayList = await fetchIncomesOfDay(year, month, date);
+    expensesOfEachDay = await fetchExpensesOfDay(year, month, date);
+    incomesOfEachDay = await fetchIncomesOfDay(year, month, date);
     totalExpensePricesOfEachDay = await fetchExpensesOfMonth(year, month);
     totalIncomePricesOfEachDay = await fetchIncomesOfMonth(year, month);
+    totalExpenseOfMonth = await calcTotalExpenseOfMonth(year, month);
     await createExpenseCategoryIdNameMap();
     await createExpenseCategoryIdIconMap();
     await createIncomeCategoryIdNameMap();
@@ -47,9 +50,13 @@ class CalendarModel extends ChangeNotifier {
   Future<void> showNextMonth() async {
     year = DateTime(year, month + 1).year;
     month = DateTime(year, month + 1).month;
-    date = 1;
-    expensesOfDayList = await fetchExpensesOfDay(year, month, date);
-    incomesOfDayList = await fetchIncomesOfDay(year, month, date);
+    if (year == DateTime.now().year && month == DateTime.now().month) {
+      date = DateTime.now().day;
+    } else {
+      date = 1;
+    }
+    expensesOfEachDay = await fetchExpensesOfDay(year, month, date);
+    incomesOfEachDay = await fetchIncomesOfDay(year, month, date);
     totalExpensePricesOfEachDay = await fetchExpensesOfMonth(year, month);
     totalIncomePricesOfEachDay = await fetchIncomesOfMonth(year, month);
     notifyListeners();
@@ -58,9 +65,13 @@ class CalendarModel extends ChangeNotifier {
   Future<void> showPreviousMonth() async {
     year = DateTime(year, month - 1).year;
     month = DateTime(year, month - 1).month;
-    date = 1;
-    expensesOfDayList = await fetchExpensesOfDay(year, month, date);
-    incomesOfDayList = await fetchIncomesOfDay(year, month, date);
+    if (year == DateTime.now().year && month == DateTime.now().month) {
+      date = DateTime.now().day;
+    } else {
+      date = 1;
+    }
+    expensesOfEachDay = await fetchExpensesOfDay(year, month, date);
+    incomesOfEachDay = await fetchIncomesOfDay(year, month, date);
     totalExpensePricesOfEachDay = await fetchExpensesOfMonth(year, month);
     totalIncomePricesOfEachDay = await fetchIncomesOfMonth(year, month);
     notifyListeners();
@@ -71,8 +82,8 @@ class CalendarModel extends ChangeNotifier {
     year = tappedYear;
     month = tappedMonth;
     date = tappedDate;
-    expensesOfDayList = await fetchExpensesOfDay(year, month, date);
-    incomesOfDayList = await fetchIncomesOfDay(year, month, date);
+    expensesOfEachDay = await fetchExpensesOfDay(year, month, date);
+    incomesOfEachDay = await fetchIncomesOfDay(year, month, date);
     notifyListeners();
   }
 
@@ -149,6 +160,20 @@ class CalendarModel extends ChangeNotifier {
       list[(element['date'] as int) - 1] += (element['price'] as int);
     });
     return list;
+  }
+
+  Future<int> calcTotalExpenseOfMonth(int year, int month) async {
+    var maps = await db.query(
+      'expenses',
+      where: 'year = ? AND month = ?',
+      whereArgs: [year, month],
+    );
+    var total = 0;
+    total += 86700; // ToDo: 固定費を足す
+    maps.forEach((element) {
+      total += element['price'] as int;
+    });
+    return total;
   }
 
   Future<void> createExpenseCategoryIdNameMap() async {
