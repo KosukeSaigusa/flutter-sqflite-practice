@@ -41,6 +41,10 @@ class DbProvider {
         await newDb.execute(
             'CREATE TABLE income_categories(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, order_number INTEGER NOT_NULL, icon_id INTEGER NOT_NULL, color_id INTEGER NOT_NULL)');
         print('openDatabase: Database created!');
+
+        /// fixed_fees テーブル
+        await newDb.execute(
+            'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, order_number INTEGER NOT_NULL)');
         print('===');
       },
     );

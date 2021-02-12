@@ -106,6 +106,18 @@ class CategoryPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                // RaisedButton(
+                //   child: Text('固定費テーブルを生成'),
+                //   onPressed: () async {
+                //     try {
+                //       await db.execute(
+                //           'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, order_number INTEGER NOT_NULL)');
+                //     } catch (e) {
+                //       print('エラー');
+                //       print(e);
+                //     }
+                //   },
+                // ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: model.currentTab == 0

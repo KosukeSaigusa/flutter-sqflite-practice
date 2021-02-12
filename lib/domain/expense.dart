@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_sqflite_practice/main.dart';
 import 'package:sqflite/sql.dart';
 
