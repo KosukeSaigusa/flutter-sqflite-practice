@@ -24,6 +24,24 @@ class IncomeCategory {
     );
   }
 
+  Future<void> updateIncomeCategory(IncomeCategory incomeCategory) async {
+    await db.update(
+      'income_categories',
+      incomeCategory.toMap(),
+      where: 'id = ?',
+      whereArgs: [incomeCategory.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteIncomeCategory(IncomeCategory incomeCategory) async {
+    await db.delete(
+      'income_categories',
+      where: 'id = ?',
+      whereArgs: [incomeCategory.id],
+    );
+  }
+
   // IncomeCategory インスタンスを DB に保存する形式に変換
   Map<String, dynamic> toMap() {
     return {

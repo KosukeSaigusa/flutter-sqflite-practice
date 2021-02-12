@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/presentation/category/category_model.dart';
+import 'package:flutter_sqflite_practice/presentation/category_add/category_add_page.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
@@ -109,228 +110,25 @@ class CategoryPage extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: model.currentTab == 0
                         ? Column(
-                            children: [
-                              for (int i = 0;
-                                  i < model.expenseCategories.length;
-                                  i++)
-                                Card(
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                      top: _paddingWidth,
-                                      bottom: _paddingWidth,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                            Icon(
-                                              iconList[model
-                                                  .expenseCategories[i].iconId],
-                                            ),
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                            Text(
-                                                '${model.expenseCategories[i].name}'),
-                                            Expanded(
-                                              child: Container(),
-                                            ),
-                                            Container(
-                                              width: _rightTextAreaWidth,
-                                              child: Text(
-                                                '予算：${model.expenseCategories[i].budget} 円'
-                                                    .replaceAllMapped(
-                                                        RegExp(
-                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                        (m) => '${m[1]},'),
-                                                textAlign: TextAlign.right,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: _rowMargin,
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                            Text(
-                                              '${model.year}年${model.month}月',
-                                            ),
-                                            Expanded(
-                                              child: Container(),
-                                            ),
-                                            Container(
-                                              width: _rightTextAreaWidth,
-                                              child: Text(
-                                                '実績：${model.totalExpensesOfEachCategory[model.expenseCategories[i].id]} 円'
-                                                    .replaceAllMapped(
-                                                        RegExp(
-                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                        (m) => '${m[1]},'),
-                                                textAlign: TextAlign.right,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: _rowMargin,
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                            Container(
-                                              color: greyColor,
-                                              width: _percentageBarWidth,
-                                              height: _percentageBarHeight,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    color: Colors.orange,
-                                                    width: _percentageBarWidth *
-                                                        model.totalExpensesOfEachCategory[
-                                                            model
-                                                                .expenseCategories[
-                                                                    i]
-                                                                .id] /
-                                                        model
-                                                            .expenseCategories[
-                                                                i]
-                                                            .budget,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(),
-                                            ),
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                            Container(
-                                              width: _rightTextAreaWidth,
-                                              child: Text(
-                                                '${(model.totalExpensesOfEachCategory[model.expenseCategories[i].id] / model.expenseCategories[i].budget * 100).toStringAsFixed(1)} %',
-                                                textAlign: TextAlign.right,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: _paddingWidth,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                            ],
+                            children: _expenseCategoryCards(
+                                context,
+                                _paddingWidth,
+                                _rightTextAreaWidth,
+                                _rowMargin,
+                                _percentageBarWidth,
+                                _percentageBarHeight),
                           )
 
                         /// 収入タブ
                         : model.currentTab == 1
                             ? Column(
-                                children: [
-                                  for (int i = 0;
-                                      i < model.incomeCategories.length;
-                                      i++)
-                                    Card(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                          top: _paddingWidth,
-                                          bottom: _paddingWidth,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: _paddingWidth,
-                                                ),
-                                                Icon(
-                                                  iconList[model
-                                                      .incomeCategories[i]
-                                                      .iconId],
-                                                ),
-                                                SizedBox(
-                                                  width: _paddingWidth,
-                                                ),
-                                                Text(
-                                                    '${model.incomeCategories[i].name}'),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: _rowMargin,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: _paddingWidth,
-                                                ),
-                                                Text(
-                                                  '${model.year}年${model.month}月',
-                                                ),
-                                                Expanded(
-                                                  child: Container(),
-                                                ),
-                                                Container(
-                                                  width: _rightTextAreaWidth,
-                                                  child: Text(
-                                                    '実績：${model.totalIncomesOfEachCategory[model.incomeCategories[i].id]} 円'
-                                                        .replaceAllMapped(
-                                                            RegExp(
-                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                            (m) => '${m[1]},'),
-                                                    textAlign: TextAlign.right,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      color: Colors.orange,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: _paddingWidth,
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: _rowMargin,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                ],
+                                children: _incomeCategoryCards(
+                                    context,
+                                    _paddingWidth,
+                                    _rightTextAreaWidth,
+                                    _rowMargin,
+                                    _percentageBarWidth,
+                                    _percentageBarHeight),
                               )
                             : SizedBox(),
                   ),
@@ -340,6 +138,271 @@ class CategoryPage extends StatelessWidget {
           },
         ),
       ),
+      floatingActionButton: Container(
+        width: 56.0,
+        height: 56.0,
+        child: RaisedButton(
+          child: Icon(Icons.add, color: Colors.white),
+          color: Colors.orange,
+          shape: const CircleBorder(),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryAddPage(WriteOptions.add),
+                fullscreenDialog: true,
+              ),
+            );
+          },
+        ),
+      ),
     );
+  }
+
+  List<Widget> _expenseCategoryCards(
+      BuildContext context,
+      double _paddingWidth,
+      double _rightTextAreaWidth,
+      double _rowMargin,
+      double _percentageBarWidth,
+      double _percentageBarHeight) {
+    final model = Provider.of<CategoryModel>(context);
+    var list = [];
+    for (var i = 0; i < model.expenseCategories.length; i++) {
+      list.add(
+        InkWell(
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryAddPage(
+                    WriteOptions.update, model.expenseCategories[i], null),
+                fullscreenDialog: true,
+              ),
+            );
+          },
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.only(
+                top: _paddingWidth,
+                bottom: _paddingWidth,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Icon(
+                        iconList[model.expenseCategories[i].iconId],
+                        color: colorList[model.expenseCategories[i].colorId],
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Text('${model.expenseCategories[i].name}'),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Container(
+                        width: _rightTextAreaWidth,
+                        child: Text(
+                          '予算：${model.expenseCategories[i].budget} 円'
+                              .replaceAllMapped(
+                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  (m) => '${m[1]},'),
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: _rowMargin,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Text(
+                        '${model.year}年${model.month}月',
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Container(
+                        width: _rightTextAreaWidth,
+                        child: Text(
+                          '実績：${model.totalExpensesOfEachCategory[model.expenseCategories[i].id]} 円'
+                              .replaceAllMapped(
+                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  (m) => '${m[1]},'),
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: _rowMargin,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Container(
+                        color: greyColor,
+                        width: _percentageBarWidth,
+                        height: _percentageBarHeight,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              color: Colors.orange,
+                              width: _percentageBarWidth *
+                                  model.totalExpensesOfEachCategory[
+                                      model.expenseCategories[i].id] /
+                                  model.expenseCategories[i].budget,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Container(
+                        width: _rightTextAreaWidth,
+                        child: Text(
+                          '${(model.totalExpensesOfEachCategory[model.expenseCategories[i].id] / model.expenseCategories[i].budget * 100).toStringAsFixed(1)} %',
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return list.cast<Widget>();
+  }
+
+  List<Widget> _incomeCategoryCards(
+      BuildContext context,
+      double _paddingWidth,
+      double _rightTextAreaWidth,
+      double _rowMargin,
+      double _percentageBarWidth,
+      double _percentageBarHeight) {
+    final model = Provider.of<CategoryModel>(context);
+    var list = [];
+    for (var i = 0; i < model.incomeCategories.length; i++) {
+      list.add(
+        InkWell(
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryAddPage(
+                    WriteOptions.update, null, model.incomeCategories[i]),
+                fullscreenDialog: true,
+              ),
+            );
+          },
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.only(
+                top: _paddingWidth,
+                bottom: _paddingWidth,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Icon(
+                        iconList[model.incomeCategories[i].iconId],
+                        color: colorList[model.expenseCategories[i].colorId],
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Text('${model.incomeCategories[i].name}'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: _rowMargin,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                      Text(
+                        '${model.year}年${model.month}月',
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Container(
+                        width: _rightTextAreaWidth,
+                        child: Text(
+                          '実績：${model.totalIncomesOfEachCategory[model.incomeCategories[i].id]} 円'
+                              .replaceAllMapped(
+                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  (m) => '${m[1]},'),
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: _paddingWidth,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: _rowMargin,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return list.cast<Widget>();
   }
 }

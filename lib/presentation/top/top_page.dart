@@ -23,7 +23,7 @@ class TopPage extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.attach_money_sharp),
-                  label: '予算',
+                  label: 'カテゴリー',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.analytics),
