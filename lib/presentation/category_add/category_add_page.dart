@@ -378,8 +378,8 @@ class CategoryAddPage extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                        left: 8.0,
-                        right: 8.0,
+                        left: marginMd,
+                        right: marginMd,
                       ),
                       width: double.infinity,
                       height: 50,
@@ -436,18 +436,6 @@ class CategoryAddPage extends StatelessWidget {
                                             : null
                                         : null
                                 : null,
-
-                        /// ToDo: option == WriteOptions.add, WriteOptions.update
-                        /// によって場合分け
-                        // model.currentTab == 0
-                        //     ? (model.isNameValid && model.isBudgetValid)
-                        //         ? () {}
-                        //         : null
-                        //     : model.currentTab == 1
-                        //         ? model.isBudgetValid
-                        //             ? () {}
-                        //             : null
-                        //         : null,
                       ),
                     ),
                     SizedBox(

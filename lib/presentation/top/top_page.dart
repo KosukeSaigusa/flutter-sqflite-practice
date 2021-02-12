@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_page.dart';
 import 'package:flutter_sqflite_practice/presentation/category/category_page.dart';
+import 'package:flutter_sqflite_practice/presentation/fixed_fee/fixed_fee_page.dart';
 import 'package:flutter_sqflite_practice/presentation/top/top_model.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +15,17 @@ class TopPage extends StatelessWidget {
           return Scaffold(
             body: _topPageBody(context),
             bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               currentIndex: model.currentIndex,
               onTap: model.onTabTapped,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_today),
                   label: 'カレンダー',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.repeat),
+                  label: '固定費',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.attach_money_sharp),
@@ -44,8 +50,9 @@ class TopPage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         _tabPage(currentIndex, 0, CalendarPage()),
-        _tabPage(currentIndex, 1, CategoryPage()),
-        _tabPage(currentIndex, 2, CalendarPage()),
+        _tabPage(currentIndex, 1, FixedFeePage()),
+        _tabPage(currentIndex, 2, CategoryPage()),
+        _tabPage(currentIndex, 3, CalendarPage()),
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
+import 'package:flutter_sqflite_practice/main.dart';
 import 'package:flutter_sqflite_practice/presentation/category/category_model.dart';
 import 'package:flutter_sqflite_practice/presentation/category_add/category_add_page.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +9,6 @@ import 'package:provider/provider.dart';
 class CategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _displayWidth = MediaQuery.of(context).size.width;
-    const _paddingWidth = 8.0;
-    const _rowMargin = 4.0;
-    const _rightTextAreaWidth = 120.0;
-    final _percentageBarWidth =
-        _displayWidth - (_paddingWidth * 4 + _rightTextAreaWidth);
-    const _percentageBarHeight = 17.2;
     return Scaffold(
       appBar: customAppBar,
       body: ChangeNotifierProvider<CategoryModel>(
@@ -107,11 +101,14 @@ class CategoryPage extends StatelessWidget {
                   ),
                 ),
                 // RaisedButton(
-                //   child: Text('固定費テーブルを生成'),
+                //   child: Text(''),
                 //   onPressed: () async {
                 //     try {
-                //       await db.execute(
-                //           'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, order_number INTEGER NOT_NULL)');
+                //       // await db.execute(
+                //       //     'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, payment_cycle_id INTEGER NOT_NULL, note TEXT NOT_NUL, order_number INTEGER NOT_NULL)');
+                //       // await db.execute('DROP TABLE fixed_fees');
+                //       // await model.setFixedFees();
+                //       print('実行完了');
                 //     } catch (e) {
                 //       print('エラー');
                 //       print(e);
@@ -122,25 +119,13 @@ class CategoryPage extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: model.currentTab == 0
                         ? Column(
-                            children: _expenseCategoryCards(
-                                context,
-                                _paddingWidth,
-                                _rightTextAreaWidth,
-                                _rowMargin,
-                                _percentageBarWidth,
-                                _percentageBarHeight),
+                            children: _expenseCategoryCards(context),
                           )
 
                         /// 収入タブ
                         : model.currentTab == 1
                             ? Column(
-                                children: _incomeCategoryCards(
-                                    context,
-                                    _paddingWidth,
-                                    _rightTextAreaWidth,
-                                    _rowMargin,
-                                    _percentageBarWidth,
-                                    _percentageBarHeight),
+                                children: _incomeCategoryCards(context),
                               )
                             : SizedBox(),
                   ),
@@ -171,13 +156,7 @@ class CategoryPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _expenseCategoryCards(
-      BuildContext context,
-      double _paddingWidth,
-      double _rightTextAreaWidth,
-      double _rowMargin,
-      double _percentageBarWidth,
-      double _percentageBarHeight) {
+  List<Widget> _expenseCategoryCards(BuildContext context) {
     final model = Provider.of<CategoryModel>(context);
     var list = [];
     for (var i = 0; i < model.expenseCategories.length; i++) {
@@ -195,53 +174,63 @@ class CategoryPage extends StatelessWidget {
           },
           child: Card(
             child: Container(
-              padding: EdgeInsets.only(
-                top: _paddingWidth,
-                bottom: _paddingWidth,
-              ),
+              padding: EdgeInsets.all(marginMd),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      Container(
+                        width: iconWidth,
+                        child: Icon(
+                          iconList[model.expenseCategories[i].iconId],
+                          color: colorList[model.expenseCategories[i].colorId],
+                        ),
+                      ),
                       SizedBox(
-                        width: _paddingWidth,
+                        width: marginMd,
                       ),
-                      Icon(
-                        iconList[model.expenseCategories[i].iconId],
-                        color: colorList[model.expenseCategories[i].colorId],
+                      Container(
+                        width: MediaQuery.of(context).size.width -
+                            (marginSm * 2 +
+                                marginMd * 4 +
+                                iconWidth +
+                                rightAlignedTextWidth),
+                        child: Text(
+                          '${model.expenseCategories[i].name}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
-                      Text('${model.expenseCategories[i].name}'),
                       Expanded(
                         child: Container(),
                       ),
+                      SizedBox(
+                        width: marginMd,
+                      ),
                       Container(
-                        width: _rightTextAreaWidth,
+                        width: rightAlignedTextWidth,
                         child: Text(
                           '予算：${model.expenseCategories[i].budget} 円'
                               .replaceAllMapped(
                                   RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                   (m) => '${m[1]},'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.right,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                     ],
                   ),
                   SizedBox(
-                    height: _rowMargin,
+                    height: marginSm,
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                       Text(
                         '${model.year}年${model.month}月',
                       ),
@@ -249,7 +238,7 @@ class CategoryPage extends StatelessWidget {
                         child: Container(),
                       ),
                       Container(
-                        width: _rightTextAreaWidth,
+                        width: rightAlignedTextWidth,
                         child: Text(
                           '実績：${model.totalExpensesOfEachCategory[model.expenseCategories[i].id]} 円'
                               .replaceAllMapped(
@@ -262,30 +251,26 @@ class CategoryPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                     ],
                   ),
                   SizedBox(
-                    height: _rowMargin,
+                    height: marginSm,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                       Container(
                         color: greyColor,
-                        width: _percentageBarWidth,
-                        height: _percentageBarHeight,
+                        width: MediaQuery.of(context).size.width -
+                            (marginMd * 4 + rightAlignedTextWidth),
+                        height: percentageBarHeight,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               color: Colors.orange,
-                              width: _percentageBarWidth *
+                              width: (MediaQuery.of(context).size.width -
+                                      (marginMd * 4 + rightAlignedTextWidth)) *
                                   model.totalExpensesOfEachCategory[
                                       model.expenseCategories[i].id] /
                                   model.expenseCategories[i].budget,
@@ -297,10 +282,10 @@ class CategoryPage extends StatelessWidget {
                         child: Container(),
                       ),
                       SizedBox(
-                        width: _paddingWidth,
+                        width: marginMd,
                       ),
                       Container(
-                        width: _rightTextAreaWidth,
+                        width: rightAlignedTextWidth,
                         child: Text(
                           '${(model.totalExpensesOfEachCategory[model.expenseCategories[i].id] / model.expenseCategories[i].budget * 100).toStringAsFixed(1)} %',
                           textAlign: TextAlign.right,
@@ -309,9 +294,6 @@ class CategoryPage extends StatelessWidget {
                             color: Colors.orange,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: _paddingWidth,
                       ),
                     ],
                   ),
@@ -325,13 +307,7 @@ class CategoryPage extends StatelessWidget {
     return list.cast<Widget>();
   }
 
-  List<Widget> _incomeCategoryCards(
-      BuildContext context,
-      double _paddingWidth,
-      double _rightTextAreaWidth,
-      double _rowMargin,
-      double _percentageBarWidth,
-      double _percentageBarHeight) {
+  List<Widget> _incomeCategoryCards(BuildContext context) {
     final model = Provider.of<CategoryModel>(context);
     var list = [];
     for (var i = 0; i < model.incomeCategories.length; i++) {
@@ -349,36 +325,41 @@ class CategoryPage extends StatelessWidget {
           },
           child: Card(
             child: Container(
-              padding: EdgeInsets.only(
-                top: _paddingWidth,
-                bottom: _paddingWidth,
-              ),
+              padding: EdgeInsets.all(marginMd),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      Container(
+                        width: iconWidth,
+                        child: Icon(
+                          iconList[model.incomeCategories[i].iconId],
+                          color: colorList[model.expenseCategories[i].colorId],
+                        ),
+                      ),
                       SizedBox(
-                        width: _paddingWidth,
+                        width: marginMd,
                       ),
-                      Icon(
-                        iconList[model.incomeCategories[i].iconId],
-                        color: colorList[model.expenseCategories[i].colorId],
+                      Container(
+                        width: MediaQuery.of(context).size.width -
+                            (marginSm * 2 + marginMd * 6),
+                        child: Text(
+                          '${model.incomeCategories[i].name}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
-                      Text('${model.incomeCategories[i].name}'),
                     ],
                   ),
                   SizedBox(
-                    height: _rowMargin,
+                    height: marginSm,
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                       Text(
                         '${model.year}年${model.month}月',
                       ),
@@ -386,7 +367,7 @@ class CategoryPage extends StatelessWidget {
                         child: Container(),
                       ),
                       Container(
-                        width: _rightTextAreaWidth,
+                        width: rightAlignedTextWidth,
                         child: Text(
                           '実績：${model.totalIncomesOfEachCategory[model.incomeCategories[i].id]} 円'
                               .replaceAllMapped(
@@ -399,13 +380,7 @@ class CategoryPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: _paddingWidth,
-                      ),
                     ],
-                  ),
-                  SizedBox(
-                    height: _rowMargin,
                   ),
                 ],
               ),

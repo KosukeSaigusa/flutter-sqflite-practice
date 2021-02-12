@@ -9,6 +9,27 @@ const smTextStyle = TextStyle(
   fontSize: 12.0,
 );
 
+/// length //////////////////////////////////////
+// 汎用
+const marginSm = 4.0;
+const marginMd = 8.0;
+
+// カレンダーページ
+
+// 固定費ページ
+const monthlyFeeTextWidth = 120.0;
+
+// カテゴリーページ
+const iconWidth = 24.0;
+const rightAlignedTextWidth = 120.0;
+const percentageBarHeight = 17.2;
+
+// 支出追加・編集ページ
+
+// カテゴリー追加・編集ページ
+
+/////////////////////////////////////////////////
+
 enum WriteOptions {
   add,
   update,

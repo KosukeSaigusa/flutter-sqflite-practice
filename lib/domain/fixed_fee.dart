@@ -6,12 +6,16 @@ class FixedFee {
     this.id,
     this.name,
     this.price,
+    this.paymentCycleId,
+    this.note,
     this.orderNumber,
   });
 
   final int id;
   final String name;
   final int price;
+  final int paymentCycleId;
+  final String note;
   final int orderNumber;
 
   Future<void> insertFixedFee(FixedFee fixedFee) async {
@@ -46,6 +50,8 @@ class FixedFee {
       'id': id,
       'name': name,
       'price': price,
+      'payment_cycle_id': paymentCycleId,
+      'note': note,
       'order_number': orderNumber,
     };
   }
