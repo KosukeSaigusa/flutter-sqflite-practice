@@ -587,8 +587,8 @@ class ExpenseAddPage extends StatelessWidget {
                       _paddingWidth,
                       model.expenseCategories[3 * i + 1].id,
                       model.expenseCategories[3 * i + 1].name,
-                      model.expenseCategories[3 * i].iconId,
-                      model.expenseCategories[3 * i].colorId)
+                      model.expenseCategories[3 * i + 1].iconId,
+                      model.expenseCategories[3 * i + 1].colorId)
                   : SizedBox(),
               SizedBox(
                 width: _paddingWidth,
@@ -600,8 +600,8 @@ class ExpenseAddPage extends StatelessWidget {
                       _paddingWidth,
                       model.expenseCategories[3 * i + 2].id,
                       model.expenseCategories[3 * i + 2].name,
-                      model.expenseCategories[3 * i].iconId,
-                      model.expenseCategories[3 * i].colorId)
+                      model.expenseCategories[3 * i + 2].iconId,
+                      model.expenseCategories[3 * i + 2].colorId)
                   : SizedBox(),
             ],
           ),
@@ -641,8 +641,8 @@ class ExpenseAddPage extends StatelessWidget {
                       _paddingWidth,
                       model.incomeCategories[3 * i + 1].id,
                       model.incomeCategories[3 * i + 1].name,
-                      model.incomeCategories[3 * i].iconId,
-                      model.incomeCategories[3 * i].colorId)
+                      model.incomeCategories[3 * i + 1].iconId,
+                      model.incomeCategories[3 * i + 1].colorId)
                   : SizedBox(),
               SizedBox(
                 width: _paddingWidth,
@@ -654,8 +654,8 @@ class ExpenseAddPage extends StatelessWidget {
                       _paddingWidth,
                       model.incomeCategories[3 * i + 2].id,
                       model.incomeCategories[3 * i + 2].name,
-                      model.incomeCategories[3 * i].iconId,
-                      model.incomeCategories[3 * i].colorId)
+                      model.incomeCategories[3 * i + 2].iconId,
+                      model.incomeCategories[3 * i + 2].colorId)
                   : SizedBox(),
             ],
           ),
