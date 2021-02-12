@@ -4,8 +4,8 @@ import 'package:flutter_sqflite_practice/domain/expense_category.dart';
 import 'package:flutter_sqflite_practice/domain/income_category.dart';
 
 class CategoryAddModel extends ChangeNotifier {
-  CategoryAddModel(WriteOptions option, ExpenseCategory expenseCategory,
-      IncomeCategory incomeCategory) {
+  CategoryAddModel(WriteOptions option,
+      [ExpenseCategory expenseCategory, IncomeCategory incomeCategory]) {
     this.option = option;
     this.expenseCategory = expenseCategory;
     this.incomeCategory = incomeCategory;

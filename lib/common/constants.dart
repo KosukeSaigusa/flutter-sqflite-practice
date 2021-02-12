@@ -25,6 +25,10 @@ const rightAlignedTextWidth = 120.0;
 const percentageBarHeight = 17.2;
 
 // 支出追加・編集ページ
+const inputItemLabelWidth = 60.0;
+const backForwardButtonWidth = 16.0;
+const textFormHeight = 36.0;
+const satisfactionLabelWidth = 15.0;
 
 // カテゴリー追加・編集ページ
 

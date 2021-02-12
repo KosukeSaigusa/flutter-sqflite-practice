@@ -3,13 +3,19 @@ import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/common/keyboard_done_button.dart';
 import 'package:flutter_sqflite_practice/common/weekday.dart';
+import 'package:flutter_sqflite_practice/domain/expense.dart';
+import 'package:flutter_sqflite_practice/domain/income.dart';
 import 'package:flutter_sqflite_practice/presentation/expense_add/expense_add_model.dart';
 import 'package:flutter_sqflite_practice/presentation/top/top_page.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseAddPage extends StatelessWidget {
-  ExpenseAddPage(this.year, this.month, this.date);
+  ExpenseAddPage(this.option,
+      [this.expense, this.income, this.year, this.month, this.date]);
+  final WriteOptions option;
+  final Expense expense;
+  final Income income;
   final int year;
   final int month;
   final int date;
@@ -43,23 +49,17 @@ class ExpenseAddPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _displayWidth = MediaQuery.of(context).size.width;
-    const _labelWidth = 60.0;
-    final _displayHeight = MediaQuery.of(context).size.height;
-    const _paddingWidth = 8.0;
-    const _iconWidth = 16.0;
-    const _textFormHeight = 36.0;
-    const _satisfactionLabelWidth = 15.0;
     return Scaffold(
       appBar: customAppBar,
       body: ChangeNotifierProvider<ExpenseAddModel>(
-        create: (_) => ExpenseAddModel(year, month, date),
+        create: (_) =>
+            ExpenseAddModel(option, expense, income, year, month, date),
         child: Consumer<ExpenseAddModel>(
           builder: (context, model, child) {
             return KeyboardActions(
               config: _buildConfig(context),
               child: SizedBox(
-                height: _displayHeight,
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,105 +79,150 @@ class ExpenseAddPage extends StatelessWidget {
                             ),
                           ),
                           Expanded(child: Container()),
-                          Container(
-                            padding: EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    model.tapExpenseTab();
-                                  },
+                          option == WriteOptions.add
+                              ? Container(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          model.tapExpenseTab();
+                                        },
+                                        child: Container(
+                                          width: 75.0,
+                                          child: Center(
+                                            child: Text(
+                                              '支出',
+                                              style: TextStyle(
+                                                color: model.currentTab == 0
+                                                    ? Colors.white
+                                                    : Colors.orange,
+                                              ),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: model.currentTab == 0
+                                                ? Colors.orange
+                                                : null,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          model.tapIncomeTab();
+                                        },
+                                        child: Container(
+                                          width: 75.0,
+                                          child: Center(
+                                            child: Text(
+                                              '収入',
+                                              style: TextStyle(
+                                                color: model.currentTab == 0
+                                                    ? Colors.orange
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: model.currentTab == 0
+                                                ? null
+                                                : Colors.orange,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  padding: EdgeInsets.all(4.0),
                                   child: Container(
                                     width: 75.0,
                                     child: Center(
                                       child: Text(
-                                        '支出',
-                                        style: TextStyle(
-                                          color: model.currentTab == 0
-                                              ? Colors.white
-                                              : Colors.orange,
-                                        ),
+                                        model.currentTab == 0
+                                            ? '支出'
+                                            : model.currentTab == 1
+                                                ? '収入'
+                                                : '',
+                                        style: TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     decoration: BoxDecoration(
-                                      color: model.currentTab == 0
-                                          ? Colors.orange
-                                          : null,
+                                      color: Colors.orange,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(5.0),
                                       ),
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    model.tapIncomeTab();
-                                  },
-                                  child: Container(
-                                    width: 75.0,
-                                    child: Center(
-                                      child: Text(
-                                        '収入',
-                                        style: TextStyle(
-                                          color: model.currentTab == 0
-                                              ? Colors.orange
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: model.currentTab == 0
-                                          ? null
-                                          : Colors.orange,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0),
-                                      ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                            ),
-                          ),
                           Expanded(child: Container()),
                           Container(
                             width: 48.0,
+                            child: option == WriteOptions.update
+                                ? IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () async {
+                                      if (model.currentTab == 0) {
+                                        await model.deleteExpense(expense);
+                                        await _showDeletedDialog(context);
+                                      }
+                                      if (model.currentTab == 1) {
+                                        await model.deleteIncome(income);
+                                        await _showDeletedDialog(context);
+                                      }
+                                    },
+                                  )
+                                : SizedBox(),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: _paddingWidth,
+                      height: marginMd,
                     ),
                     Container(
-                      height: _textFormHeight,
+                      height: textFormHeight,
                       padding: EdgeInsets.only(
-                        left: _paddingWidth,
-                        right: _paddingWidth,
+                        left: marginMd,
+                        right: marginMd,
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: _labelWidth,
+                            width: inputItemLabelWidth,
                             child: Text('日付'),
                           ),
                           SizedBox(
                             width: 8.0,
                           ),
                           Container(
-                            height: _iconWidth,
-                            width: _iconWidth,
+                            height: backForwardButtonWidth,
+                            width: backForwardButtonWidth,
                             child: IconButton(
                               padding: EdgeInsets.all(0),
                               icon: Icon(
                                 Icons.arrow_back_ios,
-                                size: _iconWidth,
+                                size: backForwardButtonWidth,
                               ),
                               onPressed: () {
                                 model.showPreviousDay();
@@ -185,13 +230,13 @@ class ExpenseAddPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: _paddingWidth,
+                            width: marginMd,
                           ),
                           Container(
-                            width: _displayWidth -
-                                (_labelWidth +
-                                    _iconWidth * 2 +
-                                    _paddingWidth * 5),
+                            width: MediaQuery.of(context).size.width -
+                                (inputItemLabelWidth +
+                                    backForwardButtonWidth * 2 +
+                                    marginMd * 5),
                             color: Colors.amber[100],
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -210,7 +255,7 @@ class ExpenseAddPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: _paddingWidth,
+                            width: marginMd,
                           ),
                           Container(
                             height: 16.0,
@@ -236,24 +281,24 @@ class ExpenseAddPage extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                        left: _paddingWidth,
-                        right: _paddingWidth,
+                        left: marginMd,
+                        right: marginMd,
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: _labelWidth,
+                            width: inputItemLabelWidth,
                             child: Text('メモ'),
                           ),
                           SizedBox(
-                            width: _paddingWidth * 2 + _iconWidth,
+                            width: marginMd * 2 + backForwardButtonWidth,
                           ),
                           Container(
-                            width: _displayWidth -
-                                (_labelWidth +
-                                    _iconWidth * 2 +
-                                    _paddingWidth * 5),
-                            height: _textFormHeight,
+                            width: MediaQuery.of(context).size.width -
+                                (inputItemLabelWidth +
+                                    backForwardButtonWidth * 2 +
+                                    marginMd * 5),
+                            height: textFormHeight,
                             child: TextFormField(
                               focusNode: _focusNodeNote,
                               initialValue: '${model.note}',
@@ -287,13 +332,13 @@ class ExpenseAddPage extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                        left: _paddingWidth,
-                        right: _paddingWidth,
+                        left: marginMd,
+                        right: marginMd,
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: _labelWidth,
+                            width: inputItemLabelWidth,
                             child: model.currentTab == 0
                                 ? Text('支出')
                                 : model.currentTab == 1
@@ -301,20 +346,20 @@ class ExpenseAddPage extends StatelessWidget {
                                     : SizedBox(),
                           ),
                           SizedBox(
-                            width: _paddingWidth * 2 + _iconWidth,
+                            width: marginMd * 2 + backForwardButtonWidth,
                           ),
                           Container(
-                            width: _displayWidth -
-                                (_labelWidth +
-                                    _iconWidth * 2 +
-                                    _paddingWidth * 5),
+                            width: MediaQuery.of(context).size.width -
+                                (inputItemLabelWidth +
+                                    backForwardButtonWidth * 2 +
+                                    marginMd * 5),
                             height: model.showPriceError
-                                ? _textFormHeight + 26.0
-                                : _textFormHeight,
+                                ? textFormHeight + 26.0
+                                : textFormHeight,
                             child: TextFormField(
                               focusNode: _focusNodePrice,
                               keyboardType: TextInputType.number,
-                              initialValue: '',
+                              initialValue: '${model.price}',
                               onChanged: (text) {
                                 model.changePrice(text);
                               },
@@ -337,10 +382,10 @@ class ExpenseAddPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: _paddingWidth,
+                            width: marginMd,
                           ),
                           Container(
-                            width: _iconWidth,
+                            width: backForwardButtonWidth,
                             child: Text('円'),
                           ),
                         ],
@@ -355,34 +400,35 @@ class ExpenseAddPage extends StatelessWidget {
                         : SizedBox(),
                     model.currentTab == 0
                         ? Container(
-                            height: _textFormHeight,
+                            height: textFormHeight,
                             padding: EdgeInsets.only(
-                              left: _paddingWidth,
-                              right: _paddingWidth,
+                              left: marginMd,
+                              right: marginMd,
                             ),
                             child: Row(
                               children: [
                                 Container(
-                                  width: _labelWidth,
+                                  width: inputItemLabelWidth,
                                   child: Text('納得度'),
                                 ),
                                 SizedBox(
-                                  width: _paddingWidth * 2 + _iconWidth,
+                                  width: marginMd * 2 + backForwardButtonWidth,
                                 ),
                                 Container(
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: _satisfactionLabelWidth,
+                                        width: satisfactionLabelWidth,
                                         child: Text('低'),
                                       ),
                                       Container(
-                                        width: _displayWidth -
-                                            (_paddingWidth * 5 +
-                                                _labelWidth +
-                                                _iconWidth * 2 +
-                                                _satisfactionLabelWidth * 2),
-                                        height: _iconWidth,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                (marginMd * 5 +
+                                                    inputItemLabelWidth +
+                                                    backForwardButtonWidth * 2 +
+                                                    satisfactionLabelWidth * 2),
+                                        height: backForwardButtonWidth,
                                         child: Slider(
                                           value: model.satisfaction.toDouble(),
                                           min: 1,
@@ -397,7 +443,7 @@ class ExpenseAddPage extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        width: _satisfactionLabelWidth,
+                                        width: satisfactionLabelWidth,
                                         child: Text('高'),
                                       ),
                                     ],
@@ -416,8 +462,8 @@ class ExpenseAddPage extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Container(
                           padding: EdgeInsets.only(
-                            left: _paddingWidth,
-                            right: _paddingWidth,
+                            left: marginMd,
+                            right: marginMd,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -428,10 +474,8 @@ class ExpenseAddPage extends StatelessWidget {
                                 height: 8.0,
                               ),
                               model.currentTab == 0
-                                  ? _expenseCategories(
-                                      context, _displayWidth, _paddingWidth)
-                                  : _incomeCategories(
-                                      context, _displayWidth, _paddingWidth),
+                                  ? _expenseCategories(context)
+                                  : _incomeCategories(context),
                             ],
                           ),
                         ),
@@ -453,83 +497,58 @@ class ExpenseAddPage extends StatelessWidget {
                         onPressed: model.isPriceValid
                             ? () async {
                                 if (model.currentTab == 0) {
-                                  await model.addExpense();
-                                  await showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Text('支出を登録しました。'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () async {
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      TopPage(),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                  if (option == WriteOptions.add) {
+                                    await model.addExpense();
+                                    await _showDoneDialog(
+                                        context, model.currentTab);
+                                  }
+                                  if (option == WriteOptions.update) {
+                                    await model.updateExpense(model.expense);
+                                    await _showDoneDialog(
+                                        context, model.currentTab);
+                                  }
                                 } else if (model.currentTab == 1) {
-                                  await model.addIncome();
-                                  await showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Text('収入を登録しました。'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () async {
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TopPage()),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                  if (option == WriteOptions.add) {
+                                    await model.addIncome();
+                                    await _showDoneDialog(
+                                        context, model.currentTab);
+                                  }
+                                  if (option == WriteOptions.update) {
+                                    await model.updateIncome(model.income);
+                                    await _showDoneDialog(
+                                        context, model.currentTab);
+                                  }
                                 } else {
                                   print('エラーが発生');
                                   return;
                                 }
                               }
                             : null,
-                        child: model.currentTab == 0
-                            ? Text(
-                                '支出を登録する',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            : model.currentTab == 1
-                                ? Text(
-                                    '収入を登録する',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                : SizedBox(),
+                        child: Text(
+                          model.currentTab == 0
+                              ? option == WriteOptions.add
+                                  ? '支出を登録する'
+                                  : option == WriteOptions.update
+                                      ? '支出を更新する'
+                                      : ''
+                              : model.currentTab == 1
+                                  ? option == WriteOptions.add
+                                      ? '収入を登録する'
+                                      : option == WriteOptions.update
+                                          ? '収入を更新する'
+                                          : ''
+                                  : '',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         color: Color(0xFFF39800),
                         textColor: Colors.white,
                       ),
                     ),
                     SizedBox(
-                      height: _displayHeight * 0.10,
+                      height: MediaQuery.of(context).size.height * 0.10,
                     ),
                     // RaisedButton(
                     //   onPressed: () async {
@@ -557,8 +576,7 @@ class ExpenseAddPage extends StatelessWidget {
     );
   }
 
-  Widget _expenseCategories(
-      BuildContext context, double _displayWidth, double _paddingWidth) {
+  Widget _expenseCategories(BuildContext context) {
     final model = Provider.of<ExpenseAddModel>(context);
     var list = [];
     var loop = (model.expenseCategories.length / 3).ceil();
@@ -566,38 +584,32 @@ class ExpenseAddPage extends StatelessWidget {
     for (var i = 0; i < loop; i++) {
       list.add(
         Container(
-          padding: EdgeInsets.only(bottom: _paddingWidth),
+          padding: EdgeInsets.only(bottom: marginMd),
           child: Row(
             children: [
               _categoryContainer(
                   context,
-                  _displayWidth,
-                  _paddingWidth,
                   model.expenseCategories[3 * i].id,
                   '${model.expenseCategories[3 * i].name}',
                   model.expenseCategories[3 * i].iconId,
                   model.expenseCategories[3 * i].colorId),
               SizedBox(
-                width: _paddingWidth,
+                width: marginMd,
               ),
               (3 * i + 1 < length)
                   ? _categoryContainer(
                       context,
-                      _displayWidth,
-                      _paddingWidth,
                       model.expenseCategories[3 * i + 1].id,
                       model.expenseCategories[3 * i + 1].name,
                       model.expenseCategories[3 * i + 1].iconId,
                       model.expenseCategories[3 * i + 1].colorId)
                   : SizedBox(),
               SizedBox(
-                width: _paddingWidth,
+                width: marginMd,
               ),
               (3 * i + 2 < length)
                   ? _categoryContainer(
                       context,
-                      _displayWidth,
-                      _paddingWidth,
                       model.expenseCategories[3 * i + 2].id,
                       model.expenseCategories[3 * i + 2].name,
                       model.expenseCategories[3 * i + 2].iconId,
@@ -611,8 +623,7 @@ class ExpenseAddPage extends StatelessWidget {
     return Column(children: list.cast<Widget>());
   }
 
-  Widget _incomeCategories(
-      BuildContext context, double _displayWidth, double _paddingWidth) {
+  Widget _incomeCategories(BuildContext context) {
     final model = Provider.of<ExpenseAddModel>(context);
     var list = [];
     var loop = (model.incomeCategories.length / 3).ceil();
@@ -620,38 +631,32 @@ class ExpenseAddPage extends StatelessWidget {
     for (var i = 0; i < loop; i++) {
       list.add(
         Container(
-          padding: EdgeInsets.only(bottom: _paddingWidth),
+          padding: EdgeInsets.only(bottom: marginMd),
           child: Row(
             children: [
               _categoryContainer(
                   context,
-                  _displayWidth,
-                  _paddingWidth,
                   model.incomeCategories[3 * i].id,
                   '${model.incomeCategories[3 * i].name}',
                   model.incomeCategories[3 * i].iconId,
                   model.incomeCategories[3 * i].colorId),
               SizedBox(
-                width: _paddingWidth,
+                width: marginMd,
               ),
               (3 * i + 1 < length)
                   ? _categoryContainer(
                       context,
-                      _displayWidth,
-                      _paddingWidth,
                       model.incomeCategories[3 * i + 1].id,
                       model.incomeCategories[3 * i + 1].name,
                       model.incomeCategories[3 * i + 1].iconId,
                       model.incomeCategories[3 * i + 1].colorId)
                   : SizedBox(),
               SizedBox(
-                width: _paddingWidth,
+                width: marginMd,
               ),
               (3 * i + 2 < length)
                   ? _categoryContainer(
                       context,
-                      _displayWidth,
-                      _paddingWidth,
                       model.incomeCategories[3 * i + 2].id,
                       model.incomeCategories[3 * i + 2].name,
                       model.incomeCategories[3 * i + 2].iconId,
@@ -665,16 +670,16 @@ class ExpenseAddPage extends StatelessWidget {
     return Column(children: list.cast<Widget>());
   }
 
-  Widget _categoryContainer(BuildContext context, double _displayWidth,
-      double _paddingWidth, int id, String name, int iconId, int colorId) {
+  Widget _categoryContainer(
+      BuildContext context, int id, String name, int iconId, int colorId) {
     final model = Provider.of<ExpenseAddModel>(context);
     return InkWell(
       onTap: () {
         model.tapCategory(id);
       },
       child: Container(
-        padding: EdgeInsets.all(_paddingWidth),
-        width: (_displayWidth - _paddingWidth * 4) / 3,
+        padding: EdgeInsets.all(marginMd),
+        width: (MediaQuery.of(context).size.width - marginMd * 4) / 3,
         child: Container(
           child: Column(
             children: [
@@ -717,6 +722,66 @@ class ExpenseAddPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showDoneDialog(BuildContext context, int currentTab) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(option == WriteOptions.add
+              ? currentTab == 0
+                  ? '支出を登録しました。'
+                  : currentTab == 1
+                      ? '収入を登録しました。'
+                      : ''
+              : option == WriteOptions.update
+                  ? currentTab == 0
+                      ? '支出を更新しました。'
+                      : currentTab == 1
+                          ? '収入を更新しました。'
+                          : ''
+                  : ''),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TopPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showDeletedDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Text('削除しました。'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TopPage()),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

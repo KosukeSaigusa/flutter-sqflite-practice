@@ -4,7 +4,6 @@ import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/common/weekday.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_model.dart';
 import 'package:flutter_sqflite_practice/presentation/expense_add/expense_add_page.dart';
-import 'package:flutter_sqflite_practice/presentation/expense_update/expense_update_page.dart';
 import 'package:provider/provider.dart';
 
 class CalendarPage extends StatelessWidget {
@@ -219,7 +218,8 @@ class CalendarPage extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ExpenseUpdatePage(
+                                                        ExpenseAddPage(
+                                                            WriteOptions.update,
                                                             null,
                                                             model.incomesOfEachDay[
                                                                 i]),
@@ -318,7 +318,8 @@ class CalendarPage extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ExpenseUpdatePage(
+                                                        ExpenseAddPage(
+                                                            WriteOptions.update,
                                                             model.expensesOfEachDay[
                                                                 i],
                                                             null),
@@ -435,8 +436,8 @@ class CalendarPage extends StatelessWidget {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ExpenseAddPage(model.year, model.month, model.date),
+                      builder: (context) => ExpenseAddPage(WriteOptions.add,
+                          null, null, model.year, model.month, model.date),
                       fullscreenDialog: true,
                     ),
                   );

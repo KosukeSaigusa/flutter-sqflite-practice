@@ -188,10 +188,11 @@ class CategoryAddPage extends StatelessWidget {
                                     onPressed: () async {
                                       if (model.currentTab == 0) {
                                         await model.deleteExpenseCategory();
-                                        await _showDeleteDialog(context);
+                                        await _showDeletedDialog(context);
                                       }
                                       if (model.currentTab == 1) {
                                         await model.deleteIncomeCategory();
+                                        await _showDeletedDialog(context);
                                       }
                                     },
                                   )
@@ -599,7 +600,7 @@ class CategoryAddPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showDeleteDialog(BuildContext context) async {
+  Future<void> _showDeletedDialog(BuildContext context) async {
     await showDialog(
       context: context,
       barrierDismissible: false,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/domain/expense.dart';
 import 'package:flutter_sqflite_practice/domain/expense_category.dart';
 import 'package:flutter_sqflite_practice/domain/income.dart';
@@ -6,23 +7,20 @@ import 'package:flutter_sqflite_practice/domain/income_category.dart';
 import 'package:flutter_sqflite_practice/main.dart';
 
 class ExpenseAddModel extends ChangeNotifier {
-  ExpenseAddModel(int initYear, int initMonth, int initDate) {
-    currentTab = 0;
-    year = initYear;
-    month = initMonth;
-    date = initDate;
-    note = '';
-    price = 0;
-    satisfaction = 3;
-    expenseCategoryId = null;
-    incomeCategoryId = null;
-    expenseCategories = [];
-    incomeCategories = [];
-    isPriceValid = false;
-    showPriceError = false;
+  ExpenseAddModel(WriteOptions option, Expense expense, Income income, int year,
+      int month, int date) {
+    this.option = option;
+    this.expense = expense;
+    this.income = income;
+    this.year = year;
+    this.month = month;
+    this.date = date;
     init();
   }
 
+  WriteOptions option;
+  Expense expense;
+  Income income;
   int currentTab;
   int year;
   int month;
@@ -36,6 +34,87 @@ class ExpenseAddModel extends ChangeNotifier {
   List<IncomeCategory> incomeCategories;
   bool isPriceValid;
   bool showPriceError;
+
+  Future<void> init() async {
+    if (option == WriteOptions.add) {
+      currentTab = 0;
+      note = '';
+      price = 0;
+      satisfaction = 3;
+      expenseCategoryId = null;
+      incomeCategoryId = null;
+      expenseCategories = [];
+      incomeCategories = [];
+      isPriceValid = false;
+      showPriceError = false;
+    }
+    if (option == WriteOptions.update) {
+      if (expense != null) {
+        currentTab = 0;
+        year = expense.year;
+        month = expense.month;
+        date = expense.date;
+        note = expense.note;
+        price = expense.price;
+        satisfaction = expense.satisfaction;
+        expenseCategoryId = null;
+        incomeCategoryId = null;
+        expenseCategories = [];
+        incomeCategories = [];
+        isPriceValid = true;
+        showPriceError = false;
+      }
+      if (income != null) {
+        currentTab = 1;
+        year = income.year;
+        month = income.month;
+        date = income.date;
+        note = income.note;
+        price = income.price;
+        satisfaction = null;
+        expenseCategoryId = null;
+        incomeCategoryId = null;
+        expenseCategories = [];
+        incomeCategories = [];
+        isPriceValid = true;
+        showPriceError = false;
+      }
+    }
+
+    expenseCategories = await fetchExpenseCategories();
+    incomeCategories = await fetchIncomeCategories();
+
+    if (option == WriteOptions.add) {
+      if (expenseCategories.isEmpty) {
+        print('支出カテゴリーが未設定です');
+      } else {
+        expenseCategoryId = expenseCategories[0].id;
+      }
+      if (incomeCategories.isEmpty) {
+        print('収入カテゴリーが未設定です');
+      } else {
+        incomeCategoryId = incomeCategories[0].id;
+      }
+    }
+    if (option == WriteOptions.update) {
+      if (expense != null) expenseCategoryId = expense.expenseCategoryId;
+      if (income != null) incomeCategoryId = income.incomeCategoryId;
+    }
+
+    notifyListeners();
+  }
+
+  void tapExpenseTab() {
+    if (option == WriteOptions.update) return;
+    currentTab = 0;
+    notifyListeners();
+  }
+
+  void tapIncomeTab() {
+    if (option == WriteOptions.update) return;
+    currentTab = 1;
+    notifyListeners();
+  }
 
   Future<void> addExpense() async {
     final newExpense = Expense(
@@ -64,29 +143,42 @@ class ExpenseAddModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init() async {
-    expenseCategories = await fetchExpenseCategories();
-    incomeCategories = await fetchIncomeCategories();
-    if (expenseCategories.isEmpty) {
-      print('支出カテゴリーが未設定です');
-    } else {
-      expenseCategoryId = expenseCategories[0].id;
-    }
-    if (incomeCategories.isEmpty) {
-      print('収入カテゴリーが未設定です');
-    } else {
-      incomeCategoryId = incomeCategories[0].id;
-    }
+  Future<void> updateExpense(Expense expense) async {
+    final updatedExpense = Expense(
+      id: expense.id,
+      note: note,
+      expenseCategoryId: expenseCategoryId,
+      price: price,
+      satisfaction: satisfaction,
+      year: year,
+      month: month,
+      date: date,
+    );
+    await Expense().updateExpense(updatedExpense);
     notifyListeners();
   }
 
-  void tapExpenseTab() {
-    currentTab = 0;
+  Future<void> updateIncome(Income income) async {
+    final updatedIncome = Income(
+      id: income.id,
+      note: note,
+      incomeCategoryId: incomeCategoryId,
+      price: price,
+      year: year,
+      month: month,
+      date: date,
+    );
+    await Income().updateIncome(updatedIncome);
     notifyListeners();
   }
 
-  void tapIncomeTab() {
-    currentTab = 1;
+  Future<void> deleteExpense(Expense expense) async {
+    await Expense().deleteExpense(expense);
+    notifyListeners();
+  }
+
+  Future<void> deleteIncome(Income income) async {
+    await Income().deleteIncome(income);
     notifyListeners();
   }
 

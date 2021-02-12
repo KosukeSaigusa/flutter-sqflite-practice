@@ -40,7 +40,7 @@ class Income {
 
   Future<void> deleteIncome(Income income) async {
     await db.delete(
-      'expenses',
+      'incomes',
       where: 'id = ?',
       whereArgs: [income.id],
     );
