@@ -146,7 +146,7 @@ class CategoryPage extends StatelessWidget {
             await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CategoryAddPage(WriteOptions.add),
+                builder: (context) => CategoryAddPage(option: WriteOptions.add),
                 fullscreenDialog: true,
               ),
             );
@@ -167,7 +167,9 @@ class CategoryPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CategoryAddPage(
-                    WriteOptions.update, model.expenseCategories[i], null),
+                  option: WriteOptions.update,
+                  expenseCategory: model.expenseCategories[i],
+                ),
                 fullscreenDialog: true,
               ),
             );
@@ -318,7 +320,8 @@ class CategoryPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CategoryAddPage(
-                    WriteOptions.update, null, model.incomeCategories[i]),
+                    option: WriteOptions.update,
+                    incomeCategory: model.incomeCategories[i]),
                 fullscreenDialog: true,
               ),
             );

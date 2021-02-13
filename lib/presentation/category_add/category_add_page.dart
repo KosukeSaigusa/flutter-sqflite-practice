@@ -11,7 +11,12 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 
 class CategoryAddPage extends StatelessWidget {
-  CategoryAddPage(this.option, [this.expenseCategory, this.incomeCategory]);
+  CategoryAddPage({
+    this.option,
+    this.expenseCategory,
+    this.incomeCategory,
+  });
+
   final WriteOptions option;
   final ExpenseCategory expenseCategory;
   final IncomeCategory incomeCategory;

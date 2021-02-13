@@ -219,10 +219,10 @@ class CalendarPage extends StatelessWidget {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         ExpenseAddPage(
-                                                            WriteOptions.update,
-                                                            null,
-                                                            model.incomesOfEachDay[
-                                                                i]),
+                                                            option: WriteOptions
+                                                                .update,
+                                                            income: model
+                                                                .incomesOfEachDay[i]),
                                                     fullscreenDialog: true,
                                                   ),
                                                 );
@@ -319,10 +319,10 @@ class CalendarPage extends StatelessWidget {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         ExpenseAddPage(
-                                                            WriteOptions.update,
-                                                            model.expensesOfEachDay[
-                                                                i],
-                                                            null),
+                                                            option: WriteOptions
+                                                                .update,
+                                                            expense: model
+                                                                .expensesOfEachDay[i]),
                                                     fullscreenDialog: true,
                                                   ),
                                                 );
@@ -436,8 +436,11 @@ class CalendarPage extends StatelessWidget {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ExpenseAddPage(WriteOptions.add,
-                          null, null, model.year, model.month, model.date),
+                      builder: (context) => ExpenseAddPage(
+                          option: WriteOptions.add,
+                          year: model.year,
+                          month: model.month,
+                          date: model.date),
                       fullscreenDialog: true,
                     ),
                   );

@@ -11,8 +11,15 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseAddPage extends StatelessWidget {
-  ExpenseAddPage(this.option,
-      [this.expense, this.income, this.year, this.month, this.date]);
+  ExpenseAddPage({
+    @required this.option,
+    this.expense,
+    this.income,
+    this.year,
+    this.month,
+    this.date,
+  });
+
   final WriteOptions option;
   final Expense expense;
   final Income income;

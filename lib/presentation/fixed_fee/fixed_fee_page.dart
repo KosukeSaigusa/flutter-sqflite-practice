@@ -86,6 +86,9 @@ class FixedFeePage extends StatelessWidget {
                           },
                         ),
                       ),
+                      SizedBox(
+                        height: marginMd,
+                      ),
                     ],
                   ),
                 ),
