@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class CategoryAddPage extends StatelessWidget {
   CategoryAddPage({
-    this.option,
+    @required this.option,
     this.expenseCategory,
     this.incomeCategory,
   });
