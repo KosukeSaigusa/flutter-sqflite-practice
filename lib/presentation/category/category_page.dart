@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
-import 'package:flutter_sqflite_practice/main.dart';
 import 'package:flutter_sqflite_practice/presentation/category/category_model.dart';
 import 'package:flutter_sqflite_practice/presentation/category_add/category_add_page.dart';
 import 'package:provider/provider.dart';
@@ -100,21 +99,6 @@ class CategoryPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                // RaisedButton(
-                //   child: Text(''),
-                //   onPressed: () async {
-                //     try {
-                //       // await db.execute(
-                //       //     'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, payment_cycle_id INTEGER NOT_NULL, note TEXT NOT_NUL, order_number INTEGER NOT_NULL)');
-                //       // await db.execute('DROP TABLE fixed_fees');
-                //       // await model.setFixedFees();
-                //       print('実行完了');
-                //     } catch (e) {
-                //       print('エラー');
-                //       print(e);
-                //     }
-                //   },
-                // ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: model.currentTab == 0

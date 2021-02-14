@@ -64,517 +64,514 @@ class ExpenseAddPage extends StatelessWidget {
         child: Consumer<ExpenseAddModel>(
           builder: (context, model, child) {
             return KeyboardActions(
+              disableScroll: true, // フォームにフォーカス時にフォームをスクロールしない
               config: _buildConfig(context),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: greyColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 48.0,
-                            child: IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: greyColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 48.0,
+                          child: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                          Expanded(child: Container()),
-                          option == WriteOptions.add
-                              ? Container(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          model.tapExpenseTab();
-                                        },
-                                        child: Container(
-                                          width: 75.0,
-                                          child: Center(
-                                            child: Text(
-                                              '支出',
-                                              style: TextStyle(
-                                                color: model.currentTab == 0
-                                                    ? Colors.white
-                                                    : Colors.orange,
-                                              ),
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: model.currentTab == 0
-                                                ? Colors.orange
-                                                : null,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0),
+                        ),
+                        Expanded(child: Container()),
+                        option == WriteOptions.add
+                            ? Container(
+                                padding: EdgeInsets.all(4.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        model.tapExpenseTab();
+                                      },
+                                      child: Container(
+                                        width: 75.0,
+                                        child: Center(
+                                          child: Text(
+                                            '支出',
+                                            style: TextStyle(
+                                              color: model.currentTab == 0
+                                                  ? Colors.white
+                                                  : Colors.orange,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          model.tapIncomeTab();
-                                        },
-                                        child: Container(
-                                          width: 75.0,
-                                          child: Center(
-                                            child: Text(
-                                              '収入',
-                                              style: TextStyle(
-                                                color: model.currentTab == 0
-                                                    ? Colors.orange
-                                                    : Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: model.currentTab == 0
-                                                ? null
-                                                : Colors.orange,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0),
-                                            ),
+                                        decoration: BoxDecoration(
+                                          color: model.currentTab == 0
+                                              ? Colors.orange
+                                              : null,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0),
                                     ),
-                                  ),
-                                )
-                              : Container(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: 75.0,
-                                    child: Center(
-                                      child: Text(
-                                        model.currentTab == 0
-                                            ? '支出'
-                                            : model.currentTab == 1
-                                                ? '収入'
-                                                : '',
-                                        style: TextStyle(color: Colors.white),
+                                    InkWell(
+                                      onTap: () {
+                                        model.tapIncomeTab();
+                                      },
+                                      child: Container(
+                                        width: 75.0,
+                                        child: Center(
+                                          child: Text(
+                                            '収入',
+                                            style: TextStyle(
+                                              color: model.currentTab == 0
+                                                  ? Colors.orange
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: model.currentTab == 0
+                                              ? null
+                                              : Colors.orange,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0),
-                                      ),
-                                    ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0),
-                                    ),
+                                  ],
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5.0),
                                   ),
                                 ),
-                          Expanded(child: Container()),
-                          Container(
-                            width: 48.0,
-                            child: option == WriteOptions.update
-                                ? IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () async {
-                                      if (model.currentTab == 0) {
-                                        await model.deleteExpense(expense);
-                                        await _showDeletedDialog(context);
-                                      }
-                                      if (model.currentTab == 1) {
-                                        await model.deleteIncome(income);
-                                        await _showDeletedDialog(context);
-                                      }
-                                    },
-                                  )
-                                : SizedBox(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: marginMd,
-                    ),
-                    Container(
-                      height: textFormHeight,
-                      padding: EdgeInsets.only(
-                        left: marginMd,
-                        right: marginMd,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: inputItemLabelWidth,
-                            child: Text('日付'),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Container(
-                            height: backForwardButtonWidth,
-                            width: backForwardButtonWidth,
-                            child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                size: backForwardButtonWidth,
-                              ),
-                              onPressed: () {
-                                model.showPreviousDay();
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: marginMd,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width -
-                                (inputItemLabelWidth +
-                                    backForwardButtonWidth * 2 +
-                                    marginMd * 5),
-                            color: Colors.amber[100],
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
+                              )
+                            : Container(
+                                padding: EdgeInsets.all(4.0),
+                                child: Container(
+                                  width: 75.0,
                                   child: Center(
                                     child: Text(
-                                      '${model.year}年${model.month}月${model.date}日(${japaneseWeekday(model.year, model.month, model.date)})',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      model.currentTab == 0
+                                          ? '支出'
+                                          : model.currentTab == 1
+                                              ? '収入'
+                                              : '',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: marginMd,
-                          ),
-                          Container(
-                            height: 16.0,
-                            width: 16.0,
-                            child: IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16.0,
-                              ),
-                              onPressed: () {
-                                model.showNextDay();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      color: greyColor,
-                      height: 5,
-                      thickness: 1,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: marginMd,
-                        right: marginMd,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: inputItemLabelWidth,
-                            child: Text('メモ'),
-                          ),
-                          SizedBox(
-                            width: marginMd * 2 + backForwardButtonWidth,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width -
-                                (inputItemLabelWidth +
-                                    backForwardButtonWidth * 2 +
-                                    marginMd * 5),
-                            height: textFormHeight,
-                            child: TextFormField(
-                              focusNode: _focusNodeNote,
-                              initialValue: '${model.note}',
-                              onChanged: (text) {
-                                model.changeNote(text);
-                              },
-                              minLines: 1,
-                              maxLines: 3,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                              ),
-                              decoration: InputDecoration(
-                                errorText: null,
-                                contentPadding: EdgeInsets.only(
-                                  left: 12.0,
-                                  right: 12.0,
-                                  top: 2.0,
-                                  bottom: 2.0,
-                                ),
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      color: greyColor,
-                      height: 5,
-                      thickness: 1,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: marginMd,
-                        right: marginMd,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: inputItemLabelWidth,
-                            child: model.currentTab == 0
-                                ? Text('支出')
-                                : model.currentTab == 1
-                                    ? Text('収入')
-                                    : SizedBox(),
-                          ),
-                          SizedBox(
-                            width: marginMd * 2 + backForwardButtonWidth,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width -
-                                (inputItemLabelWidth +
-                                    backForwardButtonWidth * 2 +
-                                    marginMd * 5),
-                            height: model.showPriceError
-                                ? textFormHeight + 26.0
-                                : textFormHeight,
-                            child: TextFormField(
-                              focusNode: _focusNodePrice,
-                              keyboardType: TextInputType.number,
-                              initialValue: '${model.price}',
-                              onChanged: (text) {
-                                model.changePrice(text);
-                              },
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                              ),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  left: 12.0,
-                                  right: 12.0,
-                                  top: 2.0,
-                                  bottom: 2.0,
-                                ),
-                                errorText: model.showPriceError
-                                    ? '正しい数値を入力して下さい。'
-                                    : null,
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: marginMd,
-                          ),
-                          Container(
-                            width: backForwardButtonWidth,
-                            child: Text('円'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    model.currentTab == 0
-                        ? const Divider(
-                            color: greyColor,
-                            height: 5,
-                            thickness: 1,
-                          )
-                        : SizedBox(),
-                    model.currentTab == 0
-                        ? Container(
-                            height: textFormHeight,
-                            padding: EdgeInsets.only(
-                              left: marginMd,
-                              right: marginMd,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: inputItemLabelWidth,
-                                  child: Text('納得度'),
-                                ),
-                                SizedBox(
-                                  width: marginMd * 2 + backForwardButtonWidth,
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: satisfactionLabelWidth,
-                                        child: Text('低'),
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                (marginMd * 5 +
-                                                    inputItemLabelWidth +
-                                                    backForwardButtonWidth * 2 +
-                                                    satisfactionLabelWidth * 2),
-                                        height: backForwardButtonWidth,
-                                        child: Slider(
-                                          value: model.satisfaction.toDouble(),
-                                          min: 1,
-                                          max: 5,
-                                          label: '${model.satisfaction}',
-                                          divisions: 4,
-                                          inactiveColor: Colors.grey,
-                                          activeColor: Colors.orange,
-                                          onChanged: (value) {
-                                            model.changeSlider(value);
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        width: satisfactionLabelWidth,
-                                        child: Text('高'),
-                                      ),
-                                    ],
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5.0),
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    const Divider(
-                      color: greyColor,
-                      height: 10,
-                      thickness: 1,
+                              ),
+                        Expanded(child: Container()),
+                        Container(
+                          width: 48.0,
+                          child: option == WriteOptions.update
+                              ? IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () async {
+                                    if (model.currentTab == 0) {
+                                      await model.deleteExpense(expense);
+                                      await _showDeletedDialog(context);
+                                    }
+                                    if (model.currentTab == 1) {
+                                      await model.deleteIncome(income);
+                                      await _showDeletedDialog(context);
+                                    }
+                                  },
+                                )
+                              : SizedBox(),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Container(
+                  ),
+                  SizedBox(
+                    height: marginMd,
+                  ),
+                  Container(
+                    height: textFormHeight,
+                    padding: EdgeInsets.only(
+                      left: marginMd,
+                      right: marginMd,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: inputItemLabelWidth,
+                          child: Text('日付'),
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        Container(
+                          height: backForwardButtonWidth,
+                          width: backForwardButtonWidth,
+                          child: IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              size: backForwardButtonWidth,
+                            ),
+                            onPressed: () {
+                              model.showPreviousDay();
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: marginMd,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width -
+                              (inputItemLabelWidth +
+                                  backForwardButtonWidth * 2 +
+                                  marginMd * 5),
+                          color: Colors.amber[100],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    '${model.year}年${model.month}月${model.date}日(${japaneseWeekday(model.year, model.month, model.date)})',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: marginMd,
+                        ),
+                        Container(
+                          height: 16.0,
+                          width: 16.0,
+                          child: IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16.0,
+                            ),
+                            onPressed: () {
+                              model.showNextDay();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    color: greyColor,
+                    height: 5,
+                    thickness: 1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: marginMd,
+                      right: marginMd,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: inputItemLabelWidth,
+                          child: Text('メモ'),
+                        ),
+                        SizedBox(
+                          width: marginMd * 2 + backForwardButtonWidth,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width -
+                              (inputItemLabelWidth +
+                                  backForwardButtonWidth * 2 +
+                                  marginMd * 5),
+                          height: textFormHeight,
+                          child: TextFormField(
+                            focusNode: _focusNodeNote,
+                            initialValue: '${model.note}',
+                            onChanged: (text) {
+                              model.changeNote(text);
+                            },
+                            minLines: 1,
+                            maxLines: 3,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            decoration: InputDecoration(
+                              errorText: null,
+                              contentPadding: EdgeInsets.only(
+                                left: 12.0,
+                                right: 12.0,
+                                top: 2.0,
+                                bottom: 2.0,
+                              ),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    color: greyColor,
+                    height: 5,
+                    thickness: 1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: marginMd,
+                      right: marginMd,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: inputItemLabelWidth,
+                          child: model.currentTab == 0
+                              ? Text('支出')
+                              : model.currentTab == 1
+                                  ? Text('収入')
+                                  : SizedBox(),
+                        ),
+                        SizedBox(
+                          width: marginMd * 2 + backForwardButtonWidth,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width -
+                              (inputItemLabelWidth +
+                                  backForwardButtonWidth * 2 +
+                                  marginMd * 5),
+                          height: model.showPriceError
+                              ? textFormHeight + 26.0
+                              : textFormHeight,
+                          child: TextFormField(
+                            focusNode: _focusNodePrice,
+                            keyboardType: TextInputType.number,
+                            initialValue: '${model.price}',
+                            onChanged: (text) {
+                              model.changePrice(text);
+                            },
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                left: 12.0,
+                                right: 12.0,
+                                top: 2.0,
+                                bottom: 2.0,
+                              ),
+                              errorText: model.showPriceError
+                                  ? '正しい数値を入力して下さい。'
+                                  : null,
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: marginMd,
+                        ),
+                        Container(
+                          width: backForwardButtonWidth,
+                          child: Text('円'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  model.currentTab == 0
+                      ? const Divider(
+                          color: greyColor,
+                          height: 5,
+                          thickness: 1,
+                        )
+                      : SizedBox(),
+                  model.currentTab == 0
+                      ? Container(
+                          height: textFormHeight,
                           padding: EdgeInsets.only(
                             left: marginMd,
                             right: marginMd,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text('カテゴリー'),
-                              SizedBox(
-                                height: 8.0,
+                              Container(
+                                width: inputItemLabelWidth,
+                                child: Text('納得度'),
                               ),
-                              model.currentTab == 0
-                                  ? _expenseCategories(context)
-                                  : _incomeCategories(context),
+                              SizedBox(
+                                width: marginMd * 2 + backForwardButtonWidth,
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: satisfactionLabelWidth,
+                                      child: Text('低'),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          (marginMd * 5 +
+                                              inputItemLabelWidth +
+                                              backForwardButtonWidth * 2 +
+                                              satisfactionLabelWidth * 2),
+                                      height: backForwardButtonWidth,
+                                      child: Slider(
+                                        value: model.satisfaction.toDouble(),
+                                        min: 1,
+                                        max: 5,
+                                        label: '${model.satisfaction}',
+                                        divisions: 4,
+                                        inactiveColor: Colors.grey,
+                                        activeColor: Colors.orange,
+                                        onChanged: (value) {
+                                          model.changeSlider(value);
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      width: satisfactionLabelWidth,
+                                      child: Text('高'),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
+                        )
+                      : SizedBox(),
+                  const Divider(
+                    color: greyColor,
+                    height: 10,
+                    thickness: 1,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          left: marginMd,
+                          right: marginMd,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('カテゴリー'),
+                            SizedBox(
+                              height: 8.0,
+                            ),
+                            model.currentTab == 0
+                                ? _expenseCategories(context)
+                                : _incomeCategories(context),
+                          ],
                         ),
                       ),
                     ),
-                    const Divider(
-                      color: greyColor,
-                      height: 20,
-                      thickness: 1,
+                  ),
+                  const Divider(
+                    color: greyColor,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: 8.0,
                     ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: 8.0,
-                        right: 8.0,
-                      ),
-                      width: double.infinity,
-                      height: 50,
-                      child: RaisedButton(
-                        onPressed: model.isPriceValid
-                            ? () async {
-                                if (model.currentTab == 0) {
-                                  if (option == WriteOptions.add) {
-                                    await model.addExpense();
-                                    await _showDoneDialog(
-                                        context, model.currentTab);
-                                  }
-                                  if (option == WriteOptions.update) {
-                                    await model.updateExpense(model.expense);
-                                    await _showDoneDialog(
-                                        context, model.currentTab);
-                                  }
-                                } else if (model.currentTab == 1) {
-                                  if (option == WriteOptions.add) {
-                                    await model.addIncome();
-                                    await _showDoneDialog(
-                                        context, model.currentTab);
-                                  }
-                                  if (option == WriteOptions.update) {
-                                    await model.updateIncome(model.income);
-                                    await _showDoneDialog(
-                                        context, model.currentTab);
-                                  }
-                                } else {
-                                  print('エラーが発生');
-                                  return;
+                    width: double.infinity,
+                    height: 50,
+                    child: RaisedButton(
+                      onPressed: model.isPriceValid
+                          ? () async {
+                              if (model.currentTab == 0) {
+                                if (option == WriteOptions.add) {
+                                  await model.addExpense();
+                                  await _showDoneDialog(
+                                      context, model.currentTab);
                                 }
+                                if (option == WriteOptions.update) {
+                                  await model.updateExpense(model.expense);
+                                  await _showDoneDialog(
+                                      context, model.currentTab);
+                                }
+                              } else if (model.currentTab == 1) {
+                                if (option == WriteOptions.add) {
+                                  await model.addIncome();
+                                  await _showDoneDialog(
+                                      context, model.currentTab);
+                                }
+                                if (option == WriteOptions.update) {
+                                  await model.updateIncome(model.income);
+                                  await _showDoneDialog(
+                                      context, model.currentTab);
+                                }
+                              } else {
+                                print('エラーが発生');
+                                return;
                               }
-                            : null,
-                        child: Text(
-                          model.currentTab == 0
-                              ? option == WriteOptions.add
-                                  ? '支出を登録する'
-                                  : option == WriteOptions.update
-                                      ? '支出を更新する'
-                                      : ''
-                              : model.currentTab == 1
-                                  ? option == WriteOptions.add
-                                      ? '収入を登録する'
-                                      : option == WriteOptions.update
-                                          ? '収入を更新する'
-                                          : ''
-                                  : '',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                            }
+                          : null,
+                      child: Text(
+                        model.currentTab == 0
+                            ? option == WriteOptions.add
+                                ? '支出を登録する'
+                                : option == WriteOptions.update
+                                    ? '支出を更新する'
+                                    : ''
+                            : model.currentTab == 1
+                                ? option == WriteOptions.add
+                                    ? '収入を登録する'
+                                    : option == WriteOptions.update
+                                        ? '収入を更新する'
+                                        : ''
+                                : '',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        color: Color(0xFFF39800),
-                        textColor: Colors.white,
                       ),
+                      color: Color(0xFFF39800),
+                      textColor: Colors.white,
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.10,
-                    ),
-                    // RaisedButton(
-                    //   onPressed: () async {
-                    //     await model.addExpenseCategory();
-                    //   },
-                    //   child: Text('支出カテゴリーを追加'),
-                    //   color: Color(0xFFF39800),
-                    //   textColor: Colors.white,
-                    // ),
-                    // RaisedButton(
-                    //   onPressed: () async {
-                    //     await model.addIncomeCategory();
-                    //   },
-                    //   child: Text('収入カテゴリーを追加'),
-                    //   color: Color(0xFFF39800),
-                    //   textColor: Colors.white,
-                    // ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.10,
+                  ),
+                  // RaisedButton(
+                  //   onPressed: () async {
+                  //     await model.addExpenseCategory();
+                  //   },
+                  //   child: Text('支出カテゴリーを追加'),
+                  //   color: Color(0xFFF39800),
+                  //   textColor: Colors.white,
+                  // ),
+                  // RaisedButton(
+                  //   onPressed: () async {
+                  //     await model.addIncomeCategory();
+                  //   },
+                  //   child: Text('収入カテゴリーを追加'),
+                  //   color: Color(0xFFF39800),
+                  //   textColor: Colors.white,
+                  // ),
+                ],
               ),
             );
           },
