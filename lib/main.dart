@@ -8,12 +8,18 @@ import 'package:sqflite/sqflite.dart';
 /// https://flutter.dev/docs/cookbook/persistence/sqlite
 
 /// Global 変数として db を定義
+DbProvider dbProvider;
 Database db;
 
 Future<void> main() async {
   // main()の中で非同期処理を行う際には、下記を実行
   WidgetsFlutterBinding.ensureInitialized();
-  db = await DbProvider().init();
+
+  // DB クラスのインスタンス Factory Constructor で生成
+  dbProvider = DbProvider();
+  await dbProvider.init();
+  db = dbProvider.getDB();
+
   runApp(MyApp());
 }
 

@@ -3,16 +3,28 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbProvider {
-  Database db;
+  Database _db;
 
-  Future<Database> init() async {
+  // Factory constructor
+  factory DbProvider() {
+    return DbProvider._();
+  }
+
+  // Generative constructor
+  DbProvider._();
+
+  Database getDB() {
+    return _db;
+  }
+
+  Future<void> init() async {
     // Pathは sqflite の getDatabasePath() でも取得可能
     var documentDirectory = await getApplicationDocumentsDirectory();
     print(documentDirectory);
     final path = join(documentDirectory.path, 'expense.db');
 
     /// openDatabase(): DBインスタンスの取得
-    db = await openDatabase(
+    _db = await openDatabase(
       path,
       version: 1,
 
@@ -48,6 +60,5 @@ class DbProvider {
         print('===');
       },
     );
-    return db;
   }
 }
