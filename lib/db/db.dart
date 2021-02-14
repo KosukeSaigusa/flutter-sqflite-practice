@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbProvider {
-  Database _db;
+  static Database _db;
 
   // Factory constructor
   factory DbProvider() {
