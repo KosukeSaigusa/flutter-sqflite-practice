@@ -365,7 +365,8 @@ class ExpenseAddPage extends StatelessWidget {
                           child: TextFormField(
                             focusNode: _focusNodePrice,
                             keyboardType: TextInputType.number,
-                            initialValue: '${model.price}',
+                            initialValue:
+                                model.price == null ? '' : '${model.price}',
                             onChanged: (text) {
                               model.changePrice(text);
                             },

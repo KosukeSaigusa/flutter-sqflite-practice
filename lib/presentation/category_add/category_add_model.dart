@@ -31,7 +31,7 @@ class CategoryAddModel extends ChangeNotifier {
     if (option == WriteOptions.add) {
       currentTab = 0;
       name = '';
-      budget = 0;
+      budget = null;
       iconId = 0;
       colorId = 0;
       iconColor = colorList[0];

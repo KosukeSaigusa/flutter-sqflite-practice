@@ -39,7 +39,7 @@ class ExpenseAddModel extends ChangeNotifier {
     if (option == WriteOptions.add) {
       currentTab = 0;
       note = '';
-      price = 0;
+      price = null;
       satisfaction = 3;
       expenseCategoryId = null;
       incomeCategoryId = null;

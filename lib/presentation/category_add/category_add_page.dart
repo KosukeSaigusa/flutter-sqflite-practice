@@ -290,7 +290,9 @@ class CategoryAddPage extends StatelessWidget {
                                 child: TextFormField(
                                   focusNode: _focusNodeBudget,
                                   keyboardType: TextInputType.number,
-                                  initialValue: '${model.budget}',
+                                  initialValue: model.budget == null
+                                      ? ''
+                                      : '${model.budget}',
                                   onChanged: (text) {
                                     model.changeBudget(text);
                                   },
