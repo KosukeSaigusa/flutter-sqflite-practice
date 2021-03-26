@@ -499,7 +499,7 @@ class ExpenseAddPage extends StatelessWidget {
                     ),
                     width: double.infinity,
                     height: 50,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: model.isPriceValid
                           ? () async {
                               if (model.currentTab == 0) {
@@ -549,14 +549,14 @@ class ExpenseAddPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      color: Color(0xFFF39800),
-                      textColor: Colors.white,
+                      // color: Color(0xFFF39800),
+                      // textColor: Colors.white,
                     ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.10,
                   ),
-                  // RaisedButton(
+                  // ElevatedButton(
                   //   onPressed: () async {
                   //     await model.addExpenseCategory();
                   //   },
@@ -564,7 +564,7 @@ class ExpenseAddPage extends StatelessWidget {
                   //   color: Color(0xFFF39800),
                   //   textColor: Colors.white,
                   // ),
-                  // RaisedButton(
+                  // ElevatedButton(
                   //   onPressed: () async {
                   //     await model.addIncomeCategory();
                   //   },

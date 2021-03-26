@@ -30,16 +30,17 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.orange,
-
-        /// スライダーのテーマ
+        // スライダーのテーマ
         sliderTheme: SliderThemeData(
           valueIndicatorColor: greyColor,
           inactiveTickMarkColor: Colors.grey,
           activeTickMarkColor: Colors.orange,
           inactiveTrackColor: Colors.grey,
         ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.grey,
+        ),
       ),
-      // home: CalendarPage(),
       home: TopPage(),
     );
   }

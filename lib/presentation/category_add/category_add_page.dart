@@ -389,7 +389,7 @@ class CategoryAddPage extends StatelessWidget {
                     ),
                     width: double.infinity,
                     height: 50,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: option == WriteOptions.add
                           ? Text(
                               'カテゴリーを登録する',
@@ -405,8 +405,8 @@ class CategoryAddPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                      color: Color(0xFFF39800),
-                      textColor: Colors.white,
+                      // color: Color(0xFFF39800),
+                      // textColor: Colors.white,
                       onPressed: option == WriteOptions.add
                           ? model.currentTab == 0
                               ? (model.isNameValid && model.isBudgetValid)

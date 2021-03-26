@@ -1,5 +1,5 @@
 import 'package:flutter_sqflite_practice/main.dart';
-import 'package:sqflite/sql.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ExpenseCategory {
   ExpenseCategory({

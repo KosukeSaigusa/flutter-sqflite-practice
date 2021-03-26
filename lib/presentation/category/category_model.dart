@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/domain/expense_category.dart';
-import 'package:flutter_sqflite_practice/domain/fixed_fee.dart';
 import 'package:flutter_sqflite_practice/domain/income_category.dart';
 import 'package:flutter_sqflite_practice/main.dart';
 
@@ -30,7 +29,7 @@ class CategoryModel extends ChangeNotifier {
     // var list = [
     //   {
     //     'name': '家賃',
-    //     'price': 63860,
+    //     'price': 90330,
     //     'payment_cycle_id': 1,
     //     'note': '',
     //   },

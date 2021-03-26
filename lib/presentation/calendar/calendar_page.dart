@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_practice/common/appbar.dart';
 import 'package:flutter_sqflite_practice/common/constants.dart';
 import 'package:flutter_sqflite_practice/common/weekday.dart';
+import 'package:flutter_sqflite_practice/main.dart';
 import 'package:flutter_sqflite_practice/presentation/calendar/calendar_model.dart';
 import 'package:flutter_sqflite_practice/presentation/expense_add/expense_add_page.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class CalendarPage extends StatelessWidget {
@@ -24,6 +29,12 @@ class CalendarPage extends StatelessWidget {
                   color: greyColor,
                   child: Column(
                     children: [
+                      // ElevatedButton(
+                      //   onPressed: () async {
+                      //     await exportToCSV();
+                      //   },
+                      //   child: Text('CSV に出力する'),
+                      // ),
                       Row(
                         children: [
                           Container(
@@ -42,7 +53,7 @@ class CalendarPage extends StatelessWidget {
                                     ),
                                   ),
                                   // Text(
-                                  //   '86700 円'.replaceAllMapped(
+                                  //   '106663 円'.replaceAllMapped(
                                   //       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                   //       (m) => '${m[1]},'),
                                   //   style: TextStyle(
@@ -50,8 +61,12 @@ class CalendarPage extends StatelessWidget {
                                   //   ),
                                   // ),
                                   Text('未登録'),
-                                  RaisedButton(
-                                    onPressed: () {},
+                                  // ElevatedButton(
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // await db.execute(
+                                      //     'CREATE TABLE fixed_fees(id INTEGER PRIMARY KEY, name TEXT NOT_NULL, price INTEGER NOT_NULL, order_number INTEGER NOT_NULL)');
+                                    },
                                     child: Text('固定費を登録する'),
                                   ),
                                 ],
@@ -451,6 +466,75 @@ class CalendarPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /// DB のバックアップ (CSV) のとり方
+  /// iTerm2 で `flutter run --debug` を実行
+  /// 実機の iPhone を選択
+  /// 下記の処理を実行し、実行結果のテキストをコピー
+  /// コンマ区切りの文字列をタブを変換するなどしてよしなに CSV として保存
+  Future<void> exportToCSV() async {
+    final tables = <String>[
+      'expenses',
+      'incomes',
+      'expense_categories',
+      'income_categories',
+      'fixed_fees',
+    ];
+    final now = DateTime.now();
+    final dir = await getApplicationDocumentsDirectory();
+    print('path: ${dir.path}');
+    for (var i = 0; i < tables.length; i++) {
+      final result = await db.query(tables[i]);
+      // final filename = '${dir.path}/${tables[i]}_${now.toIso8601String()}.csv';
+      // await File(filename).writeAsString(mapListToCsv(result));
+      debugPrint('===');
+      print('table: ${tables[i]}');
+      debugPrint(mapListToCsv(result));
+    }
+  }
+
+  /// Convert a map list to csv
+  String mapListToCsv(List<Map<String, dynamic>> mapList,
+      {ListToCsvConverter converter}) {
+    if (mapList == null) {
+      return null;
+    }
+    converter ??= const ListToCsvConverter();
+    var data = <List>[];
+    var keys = <String>[];
+    var keyIndexMap = <String, int>{};
+
+    // Add the key and fix previous records
+    int _addKey(String key) {
+      var index = keys.length;
+      keyIndexMap[key] = index;
+      keys.add(key);
+      for (var dataRow in data) {
+        dataRow.add(null);
+      }
+      return index;
+    }
+
+    for (var map in mapList) {
+      // This list might grow if a new key is found
+      var dataRow = List<dynamic>.filled(keyIndexMap.length, null);
+      // Fix missing key
+      map.forEach((key, value) {
+        var keyIndex = keyIndexMap[key];
+        if (keyIndex == null) {
+          // New key is found
+          // Add it and fix previous data
+          keyIndex = _addKey(key);
+          // grow our list
+          dataRow = List.from(dataRow, growable: true)..add(value);
+        } else {
+          dataRow[keyIndex] = value;
+        }
+      });
+      data.add(dataRow);
+    }
+    return converter.convert(<List>[keys, ...data]);
   }
 
   Widget _calendar(BuildContext context) {

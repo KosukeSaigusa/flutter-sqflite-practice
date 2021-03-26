@@ -169,7 +169,7 @@ class CalendarModel extends ChangeNotifier {
       whereArgs: [year, month],
     );
     var total = 0;
-    total += 86700; // ToDo: 固定費を足す
+    total += 106663; // ToDo: 固定費を足す
     maps.forEach((element) {
       total += element['price'] as int;
     });

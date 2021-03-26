@@ -23,7 +23,7 @@ class FixedFeePage extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        '固定費一覧（合計：86,700 円）',
+                        '固定費一覧（合計：106,663 円）',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -77,9 +77,9 @@ class FixedFeePage extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         height: 50,
-                        child: RaisedButton(
-                          color: Color(0xFFF39800),
-                          textColor: Colors.white,
+                        child: ElevatedButton(
+                          // color: Color(0xFFF39800),
+                          // textColor: Colors.white,
                           child: Text('上記の固定費を登録する'),
                           onPressed: () {
                             print('固定費を登録！！');
